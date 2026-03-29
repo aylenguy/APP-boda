@@ -104,7 +104,6 @@ export default function Home() {
           Jimena
         </span>
 
-        <h1>CAMBIO DE PRUEBA</h1>
 
         <span className="block text-lg md:text-2xl text-[#8a847d]">
           &
