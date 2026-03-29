@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 
 
+
+
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
 
@@ -64,6 +66,8 @@ export default function Home() {
   className="relative h-[75vh] md:h-[92vh] overflow-hidden"
 >
 
+
+
   <Image
     src="/images/hero-boda.jpeg"
     alt="boda"
@@ -99,6 +103,8 @@ export default function Home() {
         <span className="block text-4xl md:text-7xl font-light tracking-[0.05em]">
           Jimena
         </span>
+
+        <h1>CAMBIO DE PRUEBA</h1>
 
         <span className="block text-lg md:text-2xl text-[#8a847d]">
           &
@@ -167,7 +173,6 @@ export default function Home() {
   viewport={{ once: true }}
   className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
 >
-
   {/* TITULO */}
   <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] md:tracking-[0.5em] text-[#8a847d]">
     Itinerario
@@ -178,19 +183,19 @@ export default function Home() {
   </h2>
 
   {/* CONTENEDOR */}
-  <div className="relative mt-12 md:mt-20 max-w-4xl mx-auto">
+  <div className="relative mt-12 md:mt-20 max-w-3xl mx-auto">
 
     {/* LINEA */}
-    <div className="absolute left-4 md:left-1/2 top-0 h-full w-[1px] bg-[#d6d0c8] md:-translate-x-1/2" />
+    <div className="absolute left-3 md:left-1/2 top-0 h-full w-[1px] bg-[#d6d0c8] md:-translate-x-1/2" />
 
     {/* ===== CEREMONIA ===== */}
     <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-12 md:mb-16">
 
       {/* PUNTO */}
-      <div className="absolute left-4 md:left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#cfc8c0] border border-white shadow -translate-x-1/2" />
+      <div className="absolute left-3 md:left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#cfc8c0] border border-white shadow -translate-x-1/2" />
 
       {/* CARD */}
-      <div className="ml-10 md:ml-0 w-full md:w-[45%] bg-white p-6 md:p-8 rounded-2xl border border-[#ddd6cf] shadow-sm text-left md:text-right">
+      <div className="ml-8 md:ml-0 w-[calc(100%-2rem)] md:w-[45%] max-w-sm md:max-w-none bg-white p-5 md:p-8 rounded-2xl border border-[#ddd6cf] shadow-sm text-left md:text-right">
 
         <p className="text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-[#8a847d]">
           Ceremonia
@@ -220,13 +225,13 @@ export default function Home() {
     <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between">
 
       {/* PUNTO */}
-      <div className="absolute left-4 md:left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#cfc8c0] border border-white shadow -translate-x-1/2" />
+      <div className="absolute left-3 md:left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#cfc8c0] border border-white shadow -translate-x-1/2" />
 
       {/* espacio desktop */}
       <div className="hidden md:block md:w-[45%]" />
 
       {/* CARD */}
-      <div className="ml-10 md:ml-0 w-full md:w-[45%] bg-white p-6 md:p-8 rounded-2xl border border-[#ddd6cf] shadow-sm text-left md:text-left">
+      <div className="ml-8 md:ml-0 w-[calc(100%-2rem)] md:w-[45%] max-w-sm md:max-w-none bg-white p-5 md:p-8 rounded-2xl border border-[#ddd6cf] shadow-sm text-left md:text-left">
 
         <p className="text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-[#8a847d]">
           Celebración
@@ -250,7 +255,6 @@ export default function Home() {
     </div>
 
   </div>
-
 </motion.section>
       {/* FRASE */}
       <section className="bg-[#f6f3ee] py-24 text-center px-6">
@@ -272,7 +276,14 @@ export default function Home() {
 
       {/* RSVP */}
      {/* RSVP + CALENDARIO */}
-<section className="bg-white py-28 px-6">
+<motion.section
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
+>
+
 
   <div className="max-w-5xl mx-auto text-center">
 
@@ -420,7 +431,7 @@ export default function Home() {
     </div>
 
   </div>
-</section>
+</motion.section>
 
 <section className="relative py-36 px-6 flex justify-center items-center overflow-hidden">
 
@@ -564,7 +575,13 @@ export default function Home() {
 )}
 </section>
 
-<section className="relative py-32 px-6 text-center overflow-hidden">
+<motion.section
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
+>
 
   {/* FONDO */}
   <div className="absolute inset-0 bg-white" />
@@ -609,7 +626,7 @@ export default function Home() {
     </p>
 
   </div>
-</section>
+</motion.section>
 
 <section className="relative py-36 px-6 flex justify-center items-center">
 
@@ -678,7 +695,13 @@ export default function Home() {
   </div>
 </section>
 
-<section className="relative py-28 px-6 text-center overflow-hidden">
+<motion.section
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
+>
 
   {/* FONDO */}
   <div className="absolute inset-0 bg-white" />
@@ -712,7 +735,7 @@ export default function Home() {
     </a>
 
   </div>
-</section>
+</motion.section>
 
 <section className="relative py-28 px-6 text-center">
 
@@ -745,7 +768,13 @@ export default function Home() {
 </section>
 
 {/* FOTOS - ESTILO HERO */}
-<section className="relative py-32 px-6 text-center overflow-hidden">
+<motion.section
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
+>
 
   {/* FONDO */}
   <div className="absolute inset-0 bg-white" />
@@ -780,7 +809,7 @@ export default function Home() {
     </a>
 
   </div>
-</section>
+</motion.section>
 
 
       {/* CIERRE */}
