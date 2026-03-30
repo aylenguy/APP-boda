@@ -30,6 +30,7 @@ export default function Home() {
   const [asistencia, setAsistencia] = useState<"Si" | "No">("Si");
   const [menu, setMenu] = useState("");
   const [sending, setSending] = useState(false);
+  const [sendingText, setSendingText] = useState("");
   const [rsvpMessage, setRsvpMessage] = useState("");
   const [rsvpError, setRsvpError] = useState("");
 
@@ -116,9 +117,7 @@ export default function Home() {
     if (!normalizedInput) return guestNames.slice(0, 8);
 
     return guestNames
-      .filter((guest) =>
-        normalizeText(guest).includes(normalizedInput)
-      )
+      .filter((guest) => normalizeText(guest).includes(normalizedInput))
       .slice(0, 8);
   }, [guestNames, nombre]);
 
@@ -139,6 +138,7 @@ export default function Home() {
     setRsvpMessage("");
     setRsvpError("");
     setShowSuggestions(false);
+    setSendingText("");
   };
 
   const handleCloseRsvp = () => {
@@ -146,6 +146,7 @@ export default function Home() {
     setRsvpMessage("");
     setRsvpError("");
     setShowSuggestions(false);
+    setSendingText("");
   };
 
   const handleSelectGuest = (guest: string) => {
@@ -187,8 +188,14 @@ export default function Home() {
       return;
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 12000);
+
     try {
       setSending(true);
+      setSendingText("Enviando confirmación...");
 
       const res = await fetch(RSVP_SCRIPT_URL, {
         method: "POST",
@@ -200,23 +207,40 @@ export default function Home() {
           asistencia,
           menu: asistencia === "No" ? "" : menu,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
+      setSendingText("Procesando respuesta...");
 
       const data = await res.json();
 
       if (data.ok) {
         setRsvpMessage("¡Gracias! Tu confirmación fue enviada correctamente.");
         setRsvpError("");
+        setSendingText("");
+
         setTimeout(() => {
           resetRsvpForm();
           setOpen(false);
-        }, 1800);
+        }, 1200);
       } else {
         setRsvpError(data.message || "No se pudo enviar la confirmación.");
+        setSendingText("");
       }
     } catch (error) {
+      clearTimeout(timeoutId);
+
+      if (error instanceof Error && error.name === "AbortError") {
+        setRsvpError(
+          "La confirmación está demorando demasiado. Probá nuevamente en unos segundos."
+        );
+      } else {
+        setRsvpError("Ocurrió un error al enviar la confirmación.");
+      }
+
+      setSendingText("");
       console.error(error);
-      setRsvpError("Ocurrió un error al enviar la confirmación.");
     } finally {
       setSending(false);
     }
@@ -229,9 +253,9 @@ export default function Home() {
         <motion.img
           src="/images/hero-boda.jpeg?v=2"
           alt="Jime y Joel"
-          initial={{ scale: 1.1, opacity: 0 }}
+          initial={{ scale: 1.04, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.8, ease: "easeOut" }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
           className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:object-center"
         />
 
@@ -239,9 +263,9 @@ export default function Home() {
 
         <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+            transition={{ delay: 0.15, duration: 0.6, ease: "easeOut" }}
             className="mx-auto max-w-[680px]"
           >
             <p className="text-[13px] uppercase tracking-[0.35em] text-[#8a847d] md:text-[15px]">
@@ -250,9 +274,9 @@ export default function Home() {
 
             <h1 className="mt-6">
               <motion.span
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
+                transition={{ delay: 0.22, duration: 0.5 }}
                 className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
               >
                 Jime
@@ -261,16 +285,16 @@ export default function Home() {
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.9, duration: 0.6 }}
+                transition={{ delay: 0.32, duration: 0.35 }}
                 className="block text-base text-[#8a847d] md:text-xl"
               >
                 &
               </motion.span>
 
               <motion.span
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1, duration: 0.8 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
                 className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
               >
                 Joel
@@ -278,9 +302,9 @@ export default function Home() {
             </h1>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.8 }}
+              transition={{ delay: 0.5, duration: 0.45 }}
               className="mt-10 md:mt-14"
             >
               <span className="inline-block border border-[#d6d0c8] bg-white/80 px-5 py-3 text-xs tracking-[0.22em] md:px-8 md:py-4 md:text-sm">
@@ -317,9 +341,9 @@ export default function Home() {
 
       {/* ITINERARIO */}
       <motion.section
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
         className="bg-white px-4 py-16 text-center md:px-6 md:py-24"
       >
@@ -410,9 +434,9 @@ export default function Home() {
 
       {/* RSVP + CALENDARIO */}
       <motion.section
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
         className="bg-white px-4 py-16 text-center md:px-6 md:py-24"
       >
@@ -519,9 +543,9 @@ export default function Home() {
 
       {/* REGALOS */}
       <motion.section
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
         className="relative bg-white px-4 py-16 text-center md:px-6 md:py-24"
       >
@@ -582,9 +606,9 @@ export default function Home() {
 
       {/* FOTOS */}
       <motion.section
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
         className="relative bg-white px-4 py-16 text-center md:px-6 md:py-24"
       >
@@ -605,7 +629,9 @@ export default function Home() {
           </p>
 
           <a
-            href="#"
+            href="https://drive.google.com/drive/folders/1a6xSUMs7mD3iguaQkZimiUzp92IbdeRr?usp=sharing"
+            target="_blank"
+            rel="noreferrer"
             className="mt-10 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
           >
             Ir al álbum
@@ -688,7 +714,8 @@ export default function Home() {
 
                 {!loadingGuests && nombre.trim() && exactGuestName && (
                   <p className="mt-3 text-xs text-green-700">
-                    Invitado encontrado: <span className="font-medium">{exactGuestName}</span>
+                    Invitado encontrado:{" "}
+                    <span className="font-medium">{exactGuestName}</span>
                   </p>
                 )}
 
@@ -746,14 +773,20 @@ export default function Home() {
                   disabled={asistencia === "No" || sending}
                   className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none disabled:cursor-not-allowed disabled:bg-[#f3f1ed]"
                 >
-                 <option value="">Seleccioná una opción</option>
+                  <option value="">Seleccioná una opción</option>
                   <option value="Menú común">Menú común</option>
                   <option value="Menú Vegetariano">Menú Vegetariano</option>
                   <option value="Menú Vegano">Menú Vegano</option>
                   <option value="Menú celíaco">Menú celíaco</option>
-                  <option value="Alérgico a algún alimento">Alérgico a algún alimento</option>
+                  <option value="Alérgico a algún alimento">
+                    Alérgico a algún alimento
+                  </option>
                 </select>
               </div>
+
+              {sending && sendingText && (
+                <p className="text-xs text-[#8a847d]">{sendingText}</p>
+              )}
 
               {rsvpError && <p className="text-sm text-red-600">{rsvpError}</p>}
 
@@ -835,10 +868,7 @@ function handleAddToCalendar() {
     "details",
     "Ceremonia 18:00 hs - Primera Iglesia Bautista, San Martín 1558. Celebración desde las 21 hs en Nebraska."
   );
-  url.searchParams.append(
-    "location",
-    "Mendoza 5130, Rosario, Argentina"
-  );
+  url.searchParams.append("location", "Mendoza 5130, Rosario, Argentina");
 
   window.open(url.toString(), "_blank");
 }
