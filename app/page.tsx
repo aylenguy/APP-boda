@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 const RSVP_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbynxNkLJtDvFrMC1WbsJ-NnAZTLmXqmYGueA6LOMfcL9YawARDzsLIvCBgi9_JcMCrE0A/exec";
+  "https://script.google.com/macros/s/AKfycbw40DS1OOJqeeU-n_6KSQllGTXy35nI5dzjF2q7moNJzC4SPeS4g2qMLUNtXRD-frJ9tQ/exec";
 
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
@@ -29,6 +29,8 @@ export default function Home() {
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"Si" | "No">("Si");
   const [menu, setMenu] = useState("");
+  const [tieneAlergia, setTieneAlergia] = useState<"No" | "Si">("No");
+  const [alergiaDetalle, setAlergiaDetalle] = useState("");
   const [sending, setSending] = useState(false);
   const [sendingText, setSendingText] = useState("");
   const [rsvpMessage, setRsvpMessage] = useState("");
@@ -135,6 +137,8 @@ export default function Home() {
     setNombre("");
     setAsistencia("Si");
     setMenu("");
+    setTieneAlergia("No");
+    setAlergiaDetalle("");
     setRsvpMessage("");
     setRsvpError("");
     setShowSuggestions(false);
@@ -183,6 +187,11 @@ export default function Home() {
       return;
     }
 
+    if (asistencia === "Si" && tieneAlergia === "Si" && !alergiaDetalle.trim()) {
+      setRsvpError("Indicá a qué alimento sos alérgico o qué restricción tenés.");
+      return;
+    }
+
     if (!RSVP_SCRIPT_URL || RSVP_SCRIPT_URL.includes("PEGÁ_ACÁ")) {
       setRsvpError("Falta configurar la URL del Apps Script.");
       return;
@@ -206,6 +215,11 @@ export default function Home() {
           nombre: matchedGuestName,
           asistencia,
           menu: asistencia === "No" ? "" : menu,
+          tieneAlergia: asistencia === "No" ? "No" : tieneAlergia,
+          alergiaDetalle:
+            asistencia === "No" || tieneAlergia === "No"
+              ? ""
+              : alergiaDetalle.trim(),
         }),
         signal: controller.signal,
       });
@@ -734,32 +748,43 @@ export default function Home() {
                   Asistencia
                 </label>
 
-                <div className="mt-3 flex flex-col items-center space-y-3">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="asistencia"
-                      checked={asistencia === "Si"}
-                      onChange={() => setAsistencia("Si")}
-                      disabled={sending}
-                    />
-                    Voy a asistir
-                  </label>
+                <div className="mt-3 flex flex-col items-center gap-3">
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="asistencia"
+      checked={asistencia === "Si"}
+      onChange={() => setAsistencia("Si")}
+      disabled={sending}
+    />
+    Voy a asistir
+  </label>
 
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="asistencia"
-                      checked={asistencia === "No"}
-                      onChange={() => {
-                        setAsistencia("No");
-                        setMenu("");
-                      }}
-                      disabled={sending}
-                    />
-                    No podré asistir
-                  </label>
-                </div>
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="asistencia"
+      checked={asistencia === "No"}
+      onChange={() => {
+        setAsistencia("No");
+        setMenu("");
+        setTieneAlergia("No");
+        setAlergiaDetalle("");
+      }}
+      disabled={sending}
+    />
+    No podré asistir
+  </label>
+
+  {asistencia === "No" && (
+    <div className="w-full text-center">
+      <p className="text-xs leading-relaxed text-[#8a847d]">
+        Si no asistís, solo presioná{" "}
+        <span className="font-medium">Confirmar</span>.
+      </p>
+    </div>
+  )}
+</div>
               </div>
 
               <div>
@@ -775,14 +800,61 @@ export default function Home() {
                 >
                   <option value="">Seleccioná una opción</option>
                   <option value="Menú común">Menú común</option>
-                  <option value="Menú Vegetariano">Menú Vegetariano</option>
-                  <option value="Menú Vegano">Menú Vegano</option>
+                  <option value="Menú vegetariano">Menú vegetariano</option>
+                  <option value="Menú vegano">Menú vegano</option>
                   <option value="Menú celíaco">Menú celíaco</option>
-                  <option value="Alérgico a algún alimento">
-                    Alérgico a algún alimento
-                  </option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-xs uppercase text-[#8a847d]">
+                  ¿Tenés alguna alergia o restricción alimentaria?
+                </label>
+
+                <div className="mt-3 flex flex-col items-center space-y-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="alergia"
+                      checked={tieneAlergia === "No"}
+                      onChange={() => {
+                        setTieneAlergia("No");
+                        setAlergiaDetalle("");
+                      }}
+                      disabled={asistencia === "No" || sending}
+                    />
+                    No
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="alergia"
+                      checked={tieneAlergia === "Si"}
+                      onChange={() => setTieneAlergia("Si")}
+                      disabled={asistencia === "No" || sending}
+                    />
+                    Sí
+                  </label>
+                </div>
+              </div>
+
+              {asistencia === "Si" && tieneAlergia === "Si" && (
+                <div>
+                  <label className="block text-xs uppercase text-[#8a847d]">
+                    ¿A qué sos alérgico/a?
+                  </label>
+
+                  <input
+                    type="text"
+                    value={alergiaDetalle}
+                    onChange={(e) => setAlergiaDetalle(e.target.value)}
+                    placeholder="Ej: frutos secos, lactosa, mariscos"
+                    disabled={sending}
+                    className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none focus:border-[#2c2c2c]"
+                  />
+                </div>
+              )}
 
               {sending && sendingText && (
                 <p className="text-xs text-[#8a847d]">{sendingText}</p>
