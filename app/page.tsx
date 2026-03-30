@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CalendarDays,
   Heart,
@@ -11,6 +11,8 @@ import {
   Gem,
 } from "lucide-react";
 
+const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynxNkLJtDvFrMC1WbsJ-NnAZTLmXqmYGueA6LOMfcL9YawARDzsLIvCBgi9_JcMCrE0A/exec";
+
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
 
@@ -18,27 +20,50 @@ export default function Home() {
   const [openCBU, setOpenCBU] = useState(false);
   const [copiado, setCopiado] = useState(false);
 
-  const calculateTimeLeft = () => {
-    const difference = weddingDate.getTime() - new Date().getTime();
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(weddingDate));
 
-    if (difference <= 0) return null;
+  const [guestNames, setGuestNames] = useState<string[]>([]);
+  const [loadingGuests, setLoadingGuests] = useState(false);
 
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [nombre, setNombre] = useState("");
+  const [asistencia, setAsistencia] = useState<"Si" | "No">("Si");
+  const [menu, setMenu] = useState("");
+  const [sending, setSending] = useState(false);
+  const [rsvpMessage, setRsvpMessage] = useState("");
+  const [rsvpError, setRsvpError] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(calculateTimeLeft(weddingDate));
     }, 1000);
 
     return () => clearInterval(timer);
+  }, [weddingDate]);
+
+  useEffect(() => {
+    const fetchGuests = async () => {
+      if (!RSVP_SCRIPT_URL || RSVP_SCRIPT_URL.includes("PEGÁ_ACÁ")) return;
+
+      try {
+        setLoadingGuests(true);
+        const res = await fetch(`${RSVP_SCRIPT_URL}?action=list`, {
+          method: "GET",
+        });
+        const data = await res.json();
+
+        if (data.ok && Array.isArray(data.names)) {
+          setGuestNames(data.names);
+        } else {
+          console.error("No se pudieron cargar los invitados", data);
+        }
+      } catch (error) {
+        console.error("Error cargando invitados", error);
+      } finally {
+        setLoadingGuests(false);
+      }
+    };
+
+    fetchGuests();
   }, []);
 
   const countdownItems = [
@@ -47,6 +72,11 @@ export default function Home() {
     { key: "minutes", label: "min" },
     { key: "seconds", label: "seg" },
   ] as const;
+
+  const normalizedGuestNames = useMemo(
+    () => guestNames.map((n) => normalizeText(n)),
+    [guestNames]
+  );
 
   const handleCopyAlias = async () => {
     try {
@@ -58,75 +88,154 @@ export default function Home() {
     }
   };
 
+  const resetRsvpForm = () => {
+    setNombre("");
+    setAsistencia("Si");
+    setMenu("");
+    setRsvpMessage("");
+    setRsvpError("");
+  };
+
+  const handleCloseRsvp = () => {
+    setOpen(false);
+    setRsvpMessage("");
+    setRsvpError("");
+  };
+
+  const handleSubmitRsvp = async () => {
+    setRsvpMessage("");
+    setRsvpError("");
+
+    const trimmedName = nombre.trim();
+
+    if (!trimmedName) {
+      setRsvpError("Ingresá tu nombre y apellido.");
+      return;
+    }
+
+    const nameExists = normalizedGuestNames.includes(normalizeText(trimmedName));
+
+    if (!nameExists) {
+      setRsvpError("Ese nombre no figura en la lista de invitados.");
+      return;
+    }
+
+    if (asistencia === "Si" && !menu) {
+      setRsvpError("Seleccioná una opción de menú.");
+      return;
+    }
+
+    if (!RSVP_SCRIPT_URL || RSVP_SCRIPT_URL.includes("PEGÁ_ACÁ")) {
+      setRsvpError("Falta configurar la URL del Apps Script.");
+      return;
+    }
+
+    try {
+      setSending(true);
+
+      const res = await fetch(RSVP_SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify({
+          nombre: trimmedName,
+          asistencia,
+          menu: asistencia === "No" ? "" : menu,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        setRsvpMessage("¡Gracias! Tu confirmación fue enviada correctamente.");
+        setRsvpError("");
+        setTimeout(() => {
+          resetRsvpForm();
+          setOpen(false);
+        }, 1800);
+      } else {
+        setRsvpError(data.message || "No se pudo enviar la confirmación.");
+      }
+    } catch (error) {
+      console.error(error);
+      setRsvpError("Ocurrió un error al enviar la confirmación.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#f6f3ee] text-[#1a1a1a]">
       {/* HERO */}
       <section className="relative h-[82vh] min-h-[620px] w-full overflow-hidden bg-black md:h-[88vh] xl:h-[82vh]">
-  <motion.img
-    src="/images/hero-boda.jpeg?v=2"
-    alt="Jime y Joel"
-    initial={{ scale: 1.1, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    transition={{ duration: 1.8, ease: "easeOut" }}
-className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:object-center"  />
+        <motion.img
+          src="/images/hero-boda.jpeg?v=2"
+          alt="Jime y Joel"
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.8, ease: "easeOut" }}
+          className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:object-center"
+        />
 
-  <div className="absolute inset-0 bg-white/25 md:bg-white/45" />
+        <div className="absolute inset-0 bg-white/25 md:bg-white/45" />
 
-  <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
-      className="mx-auto max-w-[680px]"
-    >
-      <p className="text-[13px] uppercase tracking-[0.35em] text-[#8a847d] md:text-[15px]">
-        ¡Nos casamos!
-      </p>
+        <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+            className="mx-auto max-w-[680px]"
+          >
+            <p className="text-[13px] uppercase tracking-[0.35em] text-[#8a847d] md:text-[15px]">
+              ¡Nos casamos!
+            </p>
 
-      <h1 className="mt-6">
-        <motion.span
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
-        >
-          Jime
-        </motion.span>
+            <h1 className="mt-6">
+              <motion.span
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
+              >
+                Jime
+              </motion.span>
 
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          className="block text-base text-[#8a847d] md:text-xl"
-        >
-          &
-        </motion.span>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9, duration: 0.6 }}
+                className="block text-base text-[#8a847d] md:text-xl"
+              >
+                &
+              </motion.span>
 
-        <motion.span
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
-          className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
-        >
-          Joel
-        </motion.span>
-      </h1>
+              <motion.span
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.1, duration: 0.8 }}
+                className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
+              >
+                Joel
+              </motion.span>
+            </h1>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
-        className="mt-10 md:mt-14"
-      >
-        <span className="inline-block border border-[#d6d0c8] bg-white/80 px-5 py-3 text-xs tracking-[0.22em] md:px-8 md:py-4 md:text-sm">
-          28 · 08 · 2027
-        </span>
-      </motion.div>
-    </motion.div>
-  </div>
-</section>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.4, duration: 0.8 }}
+              className="mt-10 md:mt-14"
+            >
+              <span className="inline-block border border-[#d6d0c8] bg-white/80 px-5 py-3 text-xs tracking-[0.22em] md:px-8 md:py-4 md:text-sm">
+                28 · 08 · 2027
+              </span>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* COUNTDOWN */}
-      <section className="bg-[#f6f3ee] px-3 py-14 text-center md:px-6 md:py-18">
+      <section className="bg-[#f6f3ee] px-3 py-14 text-center md:px-6">
         <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px] md:tracking-[0.5em]">
           Falta para el gran día
         </p>
@@ -184,7 +293,7 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
               <p className="text-sm text-[#6b6b6b]">San Martín 1558</p>
 
               <a
-                href="https://www.google.com/maps?q=San+Martin+1558"
+                href="https://maps.app.goo.gl/BhSp2rAiA9vdSAFP9"
                 target="_blank"
                 rel="noreferrer"
                 className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
@@ -293,9 +402,13 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
                 Agendá este día tan especial para no perderte ningún momento.
               </p>
 
-              <button className="mt-8 rounded-full border border-[#cfc8c0] px-10 py-3 text-sm uppercase tracking-[0.15em] transition hover:bg-[#2c2c2c] hover:text-white">
-                Agregar
-              </button>
+             <button
+  onClick={handleAddToCalendar}
+  className="mt-8 rounded-full border border-[#cfc8c0] px-10 py-3 text-sm uppercase tracking-[0.15em] transition hover:bg-[#2c2c2c] hover:text-white"
+>
+  Agregar
+</button>
+
             </div>
           </div>
         </div>
@@ -408,8 +521,6 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
           </p>
 
           <div className="mx-auto mt-8 h-px w-24 bg-[#d6d0c8]" />
-
-        
         </div>
       </section>
 
@@ -458,7 +569,7 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
           <div className="relative w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl md:p-8">
             <button
-              onClick={() => setOpen(false)}
+              onClick={handleCloseRsvp}
               className="absolute right-5 top-4 text-xl text-gray-400 hover:text-black"
             >
               ×
@@ -477,11 +588,26 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
                 <label className="block text-xs uppercase text-[#8a847d]">
                   Nombre y apellido
                 </label>
+
                 <input
+                  list="guest-list"
                   type="text"
-                  placeholder="Ingresá tu nombre"
+                  placeholder={
+                    loadingGuests
+                      ? "Cargando invitados..."
+                      : "Ingresá tu nombre"
+                  }
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                   className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none focus:border-[#2c2c2c]"
+                  disabled={loadingGuests || sending}
                 />
+
+                <datalist id="guest-list">
+                  {guestNames.map((guest, index) => (
+                    <option key={`${guest}-${index}`} value={guest} />
+                  ))}
+                </datalist>
               </div>
 
               <div>
@@ -491,12 +617,27 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
 
                 <div className="mt-3 flex flex-col items-center space-y-3">
                   <label className="flex items-center gap-2">
-                    <input type="radio" name="asistencia" defaultChecked />
+                    <input
+                      type="radio"
+                      name="asistencia"
+                      checked={asistencia === "Si"}
+                      onChange={() => setAsistencia("Si")}
+                      disabled={sending}
+                    />
                     Voy a asistir
                   </label>
 
                   <label className="flex items-center gap-2">
-                    <input type="radio" name="asistencia" />
+                    <input
+                      type="radio"
+                      name="asistencia"
+                      checked={asistencia === "No"}
+                      onChange={() => {
+                        setAsistencia("No");
+                        setMenu("");
+                      }}
+                      disabled={sending}
+                    />
                     No podré asistir
                   </label>
                 </div>
@@ -507,16 +648,33 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
                   Menú
                 </label>
 
-                <select className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none">
-                  <option>Seleccioná una opción</option>
-                  <option>Carne</option>
-                  <option>Vegetariano</option>
-                  <option>Vegano</option>
+                <select
+                  value={menu}
+                  onChange={(e) => setMenu(e.target.value)}
+                  disabled={asistencia === "No" || sending}
+                  className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none disabled:cursor-not-allowed disabled:bg-[#f3f1ed]"
+                >
+                  <option value="">Seleccioná una opción</option>
+                  <option value="Carne">Carne</option>
+                  <option value="Vegetariano">Vegetariano</option>
+                  <option value="Vegano">Vegano</option>
                 </select>
               </div>
 
-              <button className="mt-4 w-full rounded-full bg-[#2c2c2c] py-3 uppercase tracking-[0.2em] text-white transition hover:bg-[#3a3a3a]">
-                Confirmar
+              {rsvpError && (
+                <p className="text-sm text-red-600">{rsvpError}</p>
+              )}
+
+              {rsvpMessage && (
+                <p className="text-sm text-green-700">{rsvpMessage}</p>
+              )}
+
+              <button
+                onClick={handleSubmitRsvp}
+                disabled={sending || loadingGuests}
+                className="mt-4 w-full rounded-full bg-[#2c2c2c] py-3 uppercase tracking-[0.2em] text-white transition hover:bg-[#3a3a3a] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {sending ? "Enviando..." : "Confirmar"}
               </button>
             </div>
           </div>
@@ -573,4 +731,53 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
       )}
     </main>
   );
+}
+
+function handleAddToCalendar() {
+  const url = new URL("https://calendar.google.com/calendar/render");
+
+  url.searchParams.append("action", "TEMPLATE");
+  url.searchParams.append("text", "Casamiento de Jime y Joel");
+  url.searchParams.append(
+    "dates",
+    "20270828T180000/20270829T040000"
+  );
+  url.searchParams.append(
+    "details",
+    "Ceremonia 18:00 hs - Primera Iglesia Bautista, San Martín 1558. Celebración desde las 21 hs en Nebraska."
+  );
+  url.searchParams.append(
+    "location",
+    "Mendoza 5130, Rosario, Argentina"
+  );
+
+  window.open(url.toString(), "_blank");
+}
+
+function calculateTimeLeft(weddingDate: Date) {
+  const difference = weddingDate.getTime() - new Date().getTime();
+
+  if (difference <= 0) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    };
+  }
+
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((difference / 1000 / 60) % 60),
+    seconds: Math.floor((difference / 1000) % 60),
+  };
+}
+
+function normalizeText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
 }
