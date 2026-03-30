@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
@@ -9,24 +8,19 @@ import {
   Gift,
   Camera,
   Sparkles,
-  Diamond,
-  Music,
-  Gem ,
-  Baby
+  Gem,
 } from "lucide-react";
-
-
-
 
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
 
-   const [open, setOpen] = useState(false) // 👈 ACÁ
-   const [openCBU, setOpenCBU] = useState(false)
-   const [copiado, setCopiado] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [openCBU, setOpenCBU] = useState(false);
+  const [copiado, setCopiado] = useState(false);
 
   const calculateTimeLeft = () => {
     const difference = weddingDate.getTime() - new Date().getTime();
+
     if (difference <= 0) return null;
 
     return {
@@ -37,14 +31,13 @@ export default function Home() {
     };
   };
 
-
-  
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -55,761 +48,408 @@ export default function Home() {
     { key: "seconds", label: "seg" },
   ] as const;
 
+  const handleCopyAlias = async () => {
+    try {
+      await navigator.clipboard.writeText("jimena.perezguzman");
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch (error) {
+      console.error("No se pudo copiar el alias", error);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#f6f3ee] text-[#1a1a1a]">
-
       {/* HERO */}
-<motion.section
-  initial={{ opacity: 0, scale: 1.05 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 1.2, ease: "easeOut" }}
-  className="relative h-[75vh] md:h-[92vh] overflow-hidden"
->
+      <section className="relative h-[82vh] min-h-[620px] w-full overflow-hidden bg-black md:h-[88vh] xl:h-[82vh]">
+  <motion.img
+    src="/images/hero-boda.jpeg?v=2"
+    alt="Jime y Joel"
+    initial={{ scale: 1.1, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    transition={{ duration: 1.8, ease: "easeOut" }}
+className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:object-center"  />
 
+  <div className="absolute inset-0 bg-white/25 md:bg-white/45" />
 
-
-  <Image
-    src="/images/hero-boda.jpeg"
-    alt="boda"
-    fill
-    className="object-cover object-[80%_45%] md:object-center scale-110 md:scale-100"
-  />
-
-  {/* OVERLAY */}
-  <div className="absolute inset-0 bg-white/40 md:bg-white/50" />
-
-  {/* CONTENIDO */}
-  <div className="relative flex h-full items-center justify-center px-4 md:px-6 text-center">
-    
-    <div className="max-w-xl mx-auto">
-
-      {/* TEXTO */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="text-[15px] md:text-[16px] tracking-[0.4em] md:tracking-[0.5em] uppercase text-[#8a847d]"
-      >
+  <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+      className="mx-auto max-w-[680px]"
+    >
+      <p className="text-[13px] uppercase tracking-[0.35em] text-[#8a847d] md:text-[15px]">
         ¡Nos casamos!
-      </motion.p>
+      </p>
 
-      {/* NOMBRES */}
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="mt-6 space-y-2"
-      >
-        <span className="block text-4xl md:text-7xl font-light tracking-[0.05em]">
-          Jimena
-        </span>
+      <h1 className="mt-6">
+        <motion.span
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
+        >
+          Jime
+        </motion.span>
 
-
-        <span className="block text-lg md:text-2xl text-[#8a847d]">
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.6 }}
+          className="block text-base text-[#8a847d] md:text-xl"
+        >
           &
-        </span>
+        </motion.span>
 
-        <span className="block text-4xl md:text-7xl font-light tracking-[0.05em]">
+        <motion.span
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.8 }}
+          className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
+        >
           Joel
-        </span>
-      </motion.h1>
+        </motion.span>
+      </h1>
 
-      {/* FECHA */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 }}
-        className="mt-12 md:mt-20"
+        transition={{ delay: 1.4, duration: 0.8 }}
+        className="mt-10 md:mt-14"
       >
-        <span className="border border-[#d6d0c8] px-6 md:px-8 py-3 md:py-5 text-sm md:text-base tracking-[0.25em] md:tracking-[0.3em] bg-white/80 inline-block">
+        <span className="inline-block border border-[#d6d0c8] bg-white/80 px-5 py-3 text-xs tracking-[0.22em] md:px-8 md:py-4 md:text-sm">
           28 · 08 · 2027
         </span>
       </motion.div>
-
-    </div>
+    </motion.div>
   </div>
-
-</motion.section>
-
-
-
-      {/* COUNTDOWN */}
-    <section className="bg-[#f6f3ee] py-16 md:py-20 px-4 md:px-6 text-center">
-
-  {/* TITULO */}
-  <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] md:tracking-[0.5em] text-[#8a847d]">
-    Falta para el gran día
-  </p>
-
-  {/* CONTADOR */}
-  <div className="mt-8 md:mt-10 flex justify-center items-center gap-3 md:grid md:grid-cols-4 md:gap-6 max-w-4xl mx-auto">
-
-    {countdownItems.map((item) => (
-      <div
-        key={item.key}
-        className="bg-white border border-[#ddd6cf] rounded-xl md:rounded-2xl px-3 py-4 md:py-6 shadow-sm md:shadow-[0_10px_30px_rgba(0,0,0,0.05)] text-center min-w-[65px] md:min-w-0"
-      >
-        {/* NUMERO */}
-        <p className="text-xl md:text-3xl font-light">
-          {timeLeft ? timeLeft[item.key] : "0"}
-        </p>
-
-        {/* LABEL */}
-        <p className="text-[9px] md:text-[11px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[#8a847d] mt-1 md:mt-2">
-          {item.label}
-        </p>
-      </div>
-    ))}
-
-  </div>
-
 </section>
-
- <motion.section
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  viewport={{ once: true }}
-  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
->
-  {/* TITULO */}
-  <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] md:tracking-[0.5em] text-[#8a847d]">
-    Itinerario
-  </p>
-
-  <h2 className="text-2xl md:text-4xl font-light mt-4 tracking-[0.05em]">
-    Nuestro gran día
-  </h2>
-
-  {/* CONTENEDOR */}
-  <div className="relative mt-12 md:mt-20 max-w-3xl mx-auto">
-
-    {/* LINEA */}
-    <div className="absolute left-3 md:left-1/2 top-0 h-full w-[1px] bg-[#d6d0c8] md:-translate-x-1/2" />
-
-    {/* ===== CEREMONIA ===== */}
-    <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-12 md:mb-16">
-
-      {/* PUNTO */}
-      <div className="absolute left-3 md:left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#cfc8c0] border border-white shadow -translate-x-1/2" />
-
-      {/* CARD */}
-      <div className="ml-8 md:ml-0 w-[calc(100%-2rem)] md:w-[45%] max-w-sm md:max-w-none bg-white p-5 md:p-8 rounded-2xl border border-[#ddd6cf] shadow-sm text-left md:text-right">
-
-        <p className="text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-[#8a847d]">
-          Ceremonia
+      {/* COUNTDOWN */}
+      <section className="bg-[#f6f3ee] px-3 py-14 text-center md:px-6 md:py-18">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px] md:tracking-[0.5em]">
+          Falta para el gran día
         </p>
 
-        <h3 className="text-xl md:text-2xl font-light mt-2 md:mt-3">
-          18:00 hs
-        </h3>
+        <div className="mx-auto mt-8 flex max-w-4xl flex-nowrap items-center justify-center gap-2 md:mt-10 md:gap-4">
+          {countdownItems.map((item) => (
+            <div
+              key={item.key}
+              className="min-w-0 flex-1 rounded-xl border border-[#ddd6cf] bg-white px-2 py-4 text-center shadow-sm md:rounded-2xl md:px-3 md:py-6 md:shadow-[0_10px_30px_rgba(0,0,0,0.05)]"
+            >
+              <p className="text-lg font-light leading-none md:text-3xl">
+                {timeLeft ? timeLeft[item.key] : "0"}
+              </p>
 
-        <p className="mt-3">Primera Iglesia Bautista</p>
-        <p className="text-sm text-[#6b6b6b]">San Martín 1558</p>
-
-        <a
-          href="https://www.google.com/maps?q=San+Martin+1558"
-          target="_blank"
-          className="inline-block mt-4 md:mt-6 text-xs md:text-sm uppercase tracking-[0.2em] text-[#2c2c2c] border-b border-[#2c2c2c] hover:opacity-70"
-        >
-          Ver ubicación
-        </a>
-      </div>
-
-      {/* espacio desktop */}
-      <div className="hidden md:block md:w-[45%]" />
-    </div>
-
-    {/* ===== CELEBRACION ===== */}
-    <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between">
-
-      {/* PUNTO */}
-      <div className="absolute left-3 md:left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#cfc8c0] border border-white shadow -translate-x-1/2" />
-
-      {/* espacio desktop */}
-      <div className="hidden md:block md:w-[45%]" />
-
-      {/* CARD */}
-      <div className="ml-8 md:ml-0 w-[calc(100%-2rem)] md:w-[45%] max-w-sm md:max-w-none bg-white p-5 md:p-8 rounded-2xl border border-[#ddd6cf] shadow-sm text-left md:text-left">
-
-        <p className="text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-[#8a847d]">
-          Celebración
-        </p>
-
-        <h3 className="text-xl md:text-2xl font-light mt-2 md:mt-3">
-          21:00 hs — 04:00 hs
-        </h3>
-
-        <p className="mt-3">Nebraska</p>
-        <p className="text-sm text-[#6b6b6b]">Mendoza 5130</p>
-
-        <a
-          href="https://www.google.com/maps?q=Mendoza+5130"
-          target="_blank"
-          className="inline-block mt-4 md:mt-6 text-xs md:text-sm uppercase tracking-[0.2em] text-[#2c2c2c] border-b border-[#2c2c2c] hover:opacity-70"
-        >
-          Ver ubicación
-        </a>
-      </div>
-    </div>
-
-  </div>
-</motion.section>
-      {/* FRASE */}
-      <section className="bg-[#f6f3ee] py-24 text-center px-6">
-        <div className="flex justify-center mb-6">
-          <Heart className="text-[#8a847d]" size={28} strokeWidth={1.5} />
-        </div>
-
-        <h2 className="text-2xl md:text-3xl font-light tracking-[0.1em]">
-          Sean parte de nuestra
-          <span className="block mt-2 text-[#8a847d]">
-            historia de amor
-          </span>
-        </h2>
-
-        <div className="mt-8 flex justify-center">
-          <div className="w-16 h-[1px] bg-[#d6d0c8]" />
+              <p className="mt-2 text-[8px] uppercase tracking-[0.16em] text-[#8a847d] md:text-[11px] md:tracking-[0.3em]">
+                {item.label}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* RSVP */}
-     {/* RSVP + CALENDARIO */}
-<motion.section
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  viewport={{ once: true }}
-  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
->
-
-
-  <div className="max-w-5xl mx-auto text-center">
-
-    {/* titulo */}
-    <p className="text-[11px] uppercase tracking-[0.5em] text-[#8a847d]">
-      Acompañanos
-    </p>
-
-    <h2 className="text-3xl md:text-4xl font-light mt-4 tracking-[0.05em]">
-      Confirmación & Agenda
-    </h2>
-
-    {/* linea */}
-    <div className="w-16 h-[1px] bg-[#d6d0c8] mx-auto mt-6" />
-
-    {/* grid */}
-    <div className="mt-16 grid md:grid-cols-2 gap-10">
-
-      {/* CONFIRMAR */}
-      <div className="relative bg-white p-12 rounded-[30px] border border-[#ddd6cf] shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
-
-        {/* icono flotante */}
-        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#f6f3ee] border border-[#ddd6cf] p-4 rounded-full shadow-sm">
-          <Sparkles className="text-[#8a847d]" size={26} />
-        </div>
-
-        <h3 className="text-2xl font-light mt-6">
-          Confirmar asistencia
-        </h3>
-
-        <p className="mt-4 text-[#6b6b6b] max-w-sm mx-auto">
-          Queremos compartir este momento con vos. Confirmá tu presencia para acompañarnos.
+      {/* ITINERARIO */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+        className="bg-white px-4 py-16 text-center md:px-6 md:py-24"
+      >
+        <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px] md:tracking-[0.5em]">
+          Itinerario
         </p>
 
-       <button
-  onClick={() => setOpen(true)}
-  className="mt-8 bg-[#2c2c2c] text-white px-10 py-3 rounded-full tracking-[0.15em] uppercase text-sm hover:bg-[#3a3a3a] transition"
->
-  Confirmar
-</button>
-{open && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <h2 className="mt-4 text-[1.9rem] font-light tracking-[0.05em] md:text-[2.6rem]">
+          Nuestro gran día
+        </h2>
 
-    {/* CARD */}
-    <div className="relative w-[90%] max-w-md bg-white rounded-3xl p-8 shadow-2xl text-center">
+        <div className="relative mx-auto mt-12 max-w-3xl md:mt-20">
+          <div className="absolute left-3 top-0 h-full w-[1px] bg-[#d6d0c8] md:left-1/2 md:-translate-x-1/2" />
 
-      {/* CERRAR */}
-      <button
-        onClick={() => setOpen(false)}
-        className="absolute top-4 right-5 text-gray-400 hover:text-black text-xl"
-      >
-        ×
-      </button>
+          <div className="relative mb-12 flex flex-col items-start justify-between md:mb-16 md:flex-row md:items-center">
+            <div className="absolute left-3 h-3 w-3 -translate-x-1/2 rounded-full border border-white bg-[#cfc8c0] shadow md:left-1/2 md:h-4 md:w-4" />
 
-      {/* TITULO */}
-      <h2 className="text-xl tracking-[0.2em] uppercase font-medium">
-        Confirmá tu asistencia
-      </h2>
+            <div className="ml-8 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[#ddd6cf] bg-white p-4 text-left shadow-sm md:ml-0 md:w-[45%] md:max-w-none md:p-8 md:text-right">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px]">
+                Ceremonia
+              </p>
 
-      <p className="text-sm text-[#6b6b6b] mt-2">
-        Seleccioná tu nombre y elegí el menú.
-      </p>
+              <h3 className="mt-2 text-xl font-light md:mt-3 md:text-2xl">
+                18:00 hs
+              </h3>
 
-      {/* FORM */}
-      <div className="mt-8 space-y-6 text-sm">
+              <p className="mt-3">Primera Iglesia Bautista</p>
+              <p className="text-sm text-[#6b6b6b]">San Martín 1558</p>
 
-        {/* INPUT */}
-        <div className="text-center">
-          <label className="text-xs text-[#8a847d] uppercase block">
-            Nombre y apellido
-          </label>
-          <input
-            type="text"
-            placeholder="Ingresá tu nombre"
-            className="w-full mt-3 border border-[#ddd6cf] rounded-full px-4 py-3 text-center outline-none focus:border-[#2c2c2c]"
-          />
-        </div>
+              <a
+                href="https://www.google.com/maps?q=San+Martin+1558"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
+              >
+                Ver ubicación
+              </a>
+            </div>
 
-        {/* RADIO */}
-        <div>
-          <label className="text-xs text-[#8a847d] uppercase block">
-            Asistencia
-          </label>
+            <div className="hidden md:block md:w-[45%]" />
+          </div>
 
-          <div className="mt-3 space-y-3 flex flex-col items-center">
-            <label className="flex items-center gap-2">
-              <input type="radio" name="asistencia" defaultChecked />
-              Voy a asistir
-            </label>
+          <div className="relative flex flex-col items-start justify-between md:flex-row md:items-center">
+            <div className="absolute left-3 h-3 w-3 -translate-x-1/2 rounded-full border border-white bg-[#cfc8c0] shadow md:left-1/2 md:h-4 md:w-4" />
 
-            <label className="flex items-center gap-2">
-              <input type="radio" name="asistencia" />
-              No podré asistir
-            </label>
+            <div className="hidden md:block md:w-[45%]" />
+
+            <div className="ml-8 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[#ddd6cf] bg-white p-4 text-left shadow-sm md:ml-0 md:w-[45%] md:max-w-none md:p-8">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px]">
+                Celebración
+              </p>
+
+              <h3 className="mt-2 text-xl font-light md:mt-3 md:text-2xl">
+                21:00 hs — 04:00 hs
+              </h3>
+
+              <p className="mt-3">Nebraska</p>
+              <p className="text-sm text-[#6b6b6b]">Mendoza 5130</p>
+
+              <a
+                href="https://www.google.com/maps?q=Mendoza+5130"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
+              >
+                Ver ubicación
+              </a>
+            </div>
           </div>
         </div>
+      </motion.section>
 
-        {/* SELECT */}
-        <div>
-          <label className="text-xs text-[#8a847d] uppercase block">
-            Menú
-          </label>
-
-          <select className="w-full mt-3 border border-[#ddd6cf] rounded-full px-4 py-3 text-center outline-none">
-            <option>Seleccioná una opción</option>
-            <option>Carne</option>
-            <option>Vegetariano</option>
-            <option>Vegano</option>
-          </select>
+      {/* FRASE */}
+      <section className="bg-[#f6f3ee] px-6 py-20 text-center md:py-24">
+        <div className="mb-6 flex justify-center">
+          <Heart className="text-[#8a847d]" size={28} strokeWidth={1.5} />
         </div>
 
-        {/* BOTON */}
-        <button className="w-full mt-4 bg-[#2c2c2c] text-white py-3 rounded-full tracking-[0.2em] uppercase hover:bg-[#3a3a3a] transition">
-          Confirmar
-        </button>
+        <h2 className="text-2xl font-light tracking-[0.1em] md:text-3xl">
+          Sean parte de nuestra
+          <span className="mt-2 block text-[#8a847d]">historia de amor</span>
+        </h2>
 
-      </div>
-
-    </div>
-  </div>
-)}
-      </div>
-
-      {/* CALENDARIO */}
-      <div className="relative bg-white p-12 rounded-[30px] border border-[#ddd6cf] shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
-
-        {/* icono flotante */}
-        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#f6f3ee] border border-[#ddd6cf] p-4 rounded-full shadow-sm">
-          <CalendarDays className="text-[#8a847d]" size={26} />
+        <div className="mt-8 flex justify-center">
+          <div className="h-[1px] w-16 bg-[#d6d0c8]" />
         </div>
+      </section>
 
-        <h3 className="text-2xl font-light mt-6">
-          Guardar la fecha
-        </h3>
-
-        <p className="mt-4 text-[#6b6b6b] max-w-sm mx-auto">
-          Agendá este día tan especial para no perderte ningún momento.
-        </p>
-
-        <button className="mt-8 border border-[#cfc8c0] px-10 py-3 rounded-full tracking-[0.15em] uppercase text-sm hover:bg-[#2c2c2c] hover:text-white transition">
-          Agregar
-        </button>
-      </div>
-
-    </div>
-
-  </div>
-</motion.section>
-
-<section className="relative py-36 px-6 flex justify-center items-center overflow-hidden">
-
-  {/* FONDO */}
-  <div className="absolute inset-0 bg-[#f6f3ee]" />
-
-  {/* TARJETA */}
-  <div className="relative w-full max-w-md bg-white/50 backdrop-blur-md rounded-3xl px-10 py-14 text-center shadow-xl border border-[#e5e0d8]">
-
-    {/* TITULO */}
-    <h2 className="text-[#2c2c2c] text-2xl md:text-3xl font-light tracking-[0.25em] uppercase mb-10">
-      Información de la tarjeta
-    </h2>
-
-    {/* BLOQUE */}
-    <div className="space-y-5 text-[#4a4a4a] text-sm md:text-base leading-relaxed">
-
-      {/* ITEM */}
-      <div>
-        <p className="text-[#5f6b75] text-xs tracking-[0.2em] uppercase mb-3">
-          Valor actual
-        </p>
-        <p>
-          El valor de la tarjeta es de{" "}
-          <span className="text-[#2c2c2c] font-medium text-base">
-            $109.000
-          </span>, vigente hasta el viernes 27 de marzo.
-        </p>
-      </div>
-
-      <div className="w-16 h-px bg-[#d6d0c8] mx-auto" />
-
-      {/* ITEM */}
-      <div>
-        <p className="text-[#5f6b75] text-xs tracking-[0.2em] uppercase mb-3">
-          Actualización mensual
-        </p>
-        <p>
-          Los valores se actualizarán mensualmente de acuerdo al índice inflacionario del país.
-        </p>
-      </div>
-
-      <div className="w-16 h-px bg-[#d6d0c8] mx-auto" />
-
-      {/* ITEM */}
-      <div>
-        <p className="text-[#5f6b75] text-xs tracking-[0.2em] uppercase mb-3">
-          Importante
-        </p>
-        <p>
-          Podés realizar el pago de tu tarjeta hasta el miércoles 26 de agosto.
-        </p>
-      </div>
-
-    </div>
-
-    {/* BOTÓN */}
-    <button
-  onClick={() => setOpenCBU(true)}
-  className="mt-5 inline-block bg-[#2c2c2c] text-white px-10 py-4 rounded-full text-sm uppercase tracking-[0.25em] shadow-md hover:bg-[#3a3a3a] transition"
->
-  Abonar tarjeta
-</button>
-
-    {/* TEXTO FINAL */}
-    <p className="mt-10 text-[#8a847d] text-sm italic">
-      Nos encantaría contar con tu presencia en este día tan especial.
-    </p>
-
-  </div>
-
-  {openCBU && (
-  <div
-    onClick={() => setOpenCBU(false)}
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-  >
-    {/* CARD */}
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="relative w-[90%] max-w-md bg-white rounded-3xl p-8 shadow-2xl text-center"
-    >
-
-      {/* CERRAR */}
-      <button
-        onClick={() => setOpenCBU(false)}
-        className="absolute top-4 right-5 text-gray-400 hover:text-black text-xl"
+      {/* RSVP + CALENDARIO */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+        className="bg-white px-4 py-16 text-center md:px-6 md:py-24"
       >
-        ×
-      </button>
+        <div className="mx-auto max-w-5xl text-center">
+          <p className="text-[11px] uppercase tracking-[0.5em] text-[#8a847d]">
+            Acompañanos
+          </p>
 
-      {/* TITULO */}
-      <h2 className="text-lg tracking-[0.25em] uppercase font-medium">
-        Datos bancarios
-      </h2>
+          <h2 className="mt-4 text-[1.9rem] font-light tracking-[0.05em] md:text-[2.6rem]">
+            Confirmación & Agenda
+          </h2>
 
-      <p className="text-sm text-[#6b6b6b] mt-2">
-        Podés realizar la transferencia a la siguiente cuenta:
-      </p>
+          <div className="mx-auto mt-6 h-[1px] w-16 bg-[#d6d0c8]" />
 
-      {/* DATOS */}
-      <div className="mt-6 space-y-4 text-sm text-[#4a4a4a]">
+          <div className="mt-16 grid gap-8 md:grid-cols-2 md:gap-10">
+            <div className="relative rounded-[30px] border border-[#ddd6cf] bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.05)] md:p-12">
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full border border-[#ddd6cf] bg-[#f6f3ee] p-4 shadow-sm">
+                <Sparkles className="text-[#8a847d]" size={26} />
+              </div>
 
-        <div>
-          <p className="text-xs uppercase text-[#8a847d]">Titular</p>
-          <p className="font-medium text-[#2c2c2c]">Juan Pérez</p>
+              <h3 className="mt-6 text-2xl font-light">Confirmar asistencia</h3>
+
+              <p className="mx-auto mt-4 max-w-sm text-[#6b6b6b]">
+                Queremos compartir este momento con vos. Confirmá tu presencia
+                para acompañarnos.
+              </p>
+
+              <button
+                onClick={() => setOpen(true)}
+                className="mt-8 rounded-full bg-[#2c2c2c] px-10 py-3 text-sm uppercase tracking-[0.15em] text-white transition hover:bg-[#3a3a3a]"
+              >
+                Confirmar
+              </button>
+            </div>
+
+            <div className="relative rounded-[30px] border border-[#ddd6cf] bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.05)] md:p-12">
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full border border-[#ddd6cf] bg-[#f6f3ee] p-4 shadow-sm">
+                <CalendarDays className="text-[#8a847d]" size={26} />
+              </div>
+
+              <h3 className="mt-6 text-2xl font-light">Guardar la fecha</h3>
+
+              <p className="mx-auto mt-4 max-w-sm text-[#6b6b6b]">
+                Agendá este día tan especial para no perderte ningún momento.
+              </p>
+
+              <button className="mt-8 rounded-full border border-[#cfc8c0] px-10 py-3 text-sm uppercase tracking-[0.15em] transition hover:bg-[#2c2c2c] hover:text-white">
+                Agregar
+              </button>
+            </div>
+          </div>
         </div>
+      </motion.section>
 
-        <div>
-          <p className="text-xs uppercase text-[#8a847d]">Banco</p>
-          <p>Banco Nación</p>
-        </div>
+      {/* TARJETA */}
+      <section className="relative flex items-center justify-center overflow-hidden px-6 py-20 md:py-28">
+        <div className="absolute inset-0 bg-[#f6f3ee]" />
 
-        <div>
-          <p className="text-xs uppercase text-[#8a847d]">CBU</p>
-          <p className="font-mono text-[#2c2c2c]">
-            0000003100000001234567
+        <div className="relative w-full max-w-md rounded-3xl border border-[#e5e0d8] bg-white/50 px-8 py-12 text-center shadow-xl backdrop-blur-md md:px-10 md:py-14">
+          <h2 className="mb-8 text-2xl font-light uppercase tracking-[0.25em] text-[#2c2c2c] md:mb-10 md:text-3xl">
+            Información de la tarjeta
+          </h2>
+
+          <div className="space-y-5 text-sm leading-relaxed text-[#4a4a4a] md:text-base">
+            <div>
+              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
+                Valor actual
+              </p>
+              <p>
+                El valor de la tarjeta es de{" "}
+                <span className="text-base font-medium text-[#2c2c2c]">
+                  $95 dólares (dólar oficial, cotización del día)
+                </span>
+              </p>
+            </div>
+
+            <div className="mx-auto h-px w-16 bg-[#d6d0c8]" />
+
+            <div>
+              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
+                Actualización
+              </p>
+              <p>Aumenta según el IPC del país</p>
+            </div>
+
+            <div className="mx-auto h-px w-16 bg-[#d6d0c8]" />
+          </div>
+
+          <button
+            onClick={() => setOpenCBU(true)}
+            className="mt-5 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
+          >
+            Abonar tarjeta
+          </button>
+
+          <p className="mt-8 text-sm italic text-[#8a847d] md:mt-10">
+            Nos encantaría contar con tu presencia en este día tan especial.
           </p>
         </div>
+      </section>
 
-        <div>
-          <p className="text-xs uppercase text-[#8a847d]">Alias</p>
-          <p className="font-medium">boda.jime.joel</p>
+      {/* REGALOS */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+        className="relative bg-white px-4 py-16 text-center md:px-6 md:py-24"
+      >
+        <div className="mx-auto max-w-2xl">
+          <div className="my-6 flex justify-center">
+            <div className="rounded-full border border-[#d6d0c8] p-4">
+              <Gift className="text-[#8a847d]" size={26} strokeWidth={1.5} />
+            </div>
+          </div>
+
+          <h2 className="text-2xl font-light uppercase tracking-[0.35em] text-[#2c2c2c] md:text-3xl">
+            Regalos
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-[620px] text-sm leading-7 text-[#4a4a4a] md:text-base">
+            Nuestro mejor regalo es que puedas acompañarnos en este día tan
+            especial. Pero si deseás hacernos un obsequio, podés colaborar con
+            nuestra luna de miel.
+          </p>
+
+          <button
+            onClick={() => setOpenCBU(true)}
+            className="mt-10 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
+          >
+            Hacer un regalo
+          </button>
+
+          <div className="mx-auto mt-10 h-px w-20 bg-[#d6d0c8]" />
+
+          <p className="mt-6 text-sm leading-7 text-[#4a4a4a] md:text-base">
+            Gracias por ser parte de este momento tan importante para nosotros.
+          </p>
         </div>
+      </motion.section>
 
-      </div>
+      {/* DRESS CODE */}
+      <section className="relative flex items-center justify-center overflow-hidden px-6 py-20 md:py-28">
+        <div className="absolute inset-0 bg-[#f6f3ee]" />
 
-      {/* BOTON COPIAR */}
-     <button
-  onClick={() => {
-    navigator.clipboard.writeText("0000003100000001234567");
-    setCopiado(true);
-    setTimeout(() => setCopiado(false), 2000);
-  }}
-  className="mt-6 bg-[#2c2c2c] text-white px-8 py-3 rounded-full text-xs uppercase tracking-[0.2em]"
->
-  {copiado ? "Copiado ✔" : "Copiar CBU"}
-</button>
+        <div className="relative w-full max-w-2xl rounded-3xl border border-[#e5e0d8] bg-white/60 px-8 py-12 text-center shadow-xl backdrop-blur-md md:px-12 md:py-16">
+          <div className="mb-8 flex justify-center">
+            <div className="rounded-full border border-[#d6d0c8] p-5">
+              <Gem className="text-[#8a847d]" size={30} strokeWidth={1.2} />
+            </div>
+          </div>
 
-    </div>
-  </div>
-)}
-</section>
+          <h2 className="text-2xl font-light uppercase tracking-[0.4em] text-[#2c2c2c] md:text-3xl">
+            Dress Code
+          </h2>
 
-<motion.section
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  viewport={{ once: true }}
-  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
->
+          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-[#8a847d]">
+            Formal
+          </p>
 
-  {/* FONDO */}
-  <div className="absolute inset-0 bg-white" />
+          <div className="mx-auto mt-8 h-px w-24 bg-[#d6d0c8]" />
 
-  {/* CONTENIDO */}
-  <div className="relative max-w-xl mx-auto">
+          <div className="mx-auto mt-10 max-w-lg space-y-4 text-base leading-relaxed text-[#4a4a4a] md:mt-12">
+            <p>
+              Elegí un look elegante y cómodo para disfrutar con nosotros esta
+              noche tan especial.
+            </p>
+          </div>
+        </div>
+      </section>
 
+      {/* FOTOS */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+        className="relative bg-white px-4 py-16 text-center md:px-6 md:py-24"
+      >
+        <div className="relative mx-auto max-w-3xl">
+          <div className="mb-6 flex justify-center">
+            <div className="rounded-full border border-[#d6d0c8] p-4">
+              <Camera className="text-[#8a847d]" size={26} strokeWidth={1.5} />
+            </div>
+          </div>
 
-{/* ICONO */}
-    <div className="flex justify-center my-6">
-      <div className="border border-[#d6d0c8] rounded-full p-4">
-        <Gift className="text-[#8a847d]" size={26} strokeWidth={1.5} />
-      </div>
-    </div>
-    {/* TITULO */}
-    <h2 className="text-[#2c2c2c] text-2xl md:text-3xl tracking-[0.35em] uppercase font-light">
-      Regalos
-    </h2>
+          <h2 className="text-2xl font-light uppercase tracking-[0.35em] text-[#2c2c2c] md:text-3xl">
+            Queremos ver tus fotos
+          </h2>
 
-    
+          <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-[#4a4a4a] md:text-base">
+            Podés subir todas las fotos del gran día a nuestro álbum compartido
+            para revivir juntos cada momento especial.
+          </p>
 
-    {/* TEXTO */}
-    <p className="mt-6 text-[#4a4a4a] text-sm md:text-base leading-7">
-      Nuestro mejor regalo es que puedas acompañarnos en este día tan especial.
-      Pero si deseás hacernos un obsequio, podés colaborar con nuestra luna de miel.
-    </p>
-
-    {/* BOTÓN */}
-    <a
-      href="#"
-      className="mt-10 inline-block bg-[#2c2c2c] text-white px-10 py-4 rounded-full text-sm uppercase tracking-[0.25em] shadow-md hover:bg-[#3a3a3a] transition"
-    >
-      Hacer un regalo
-    </a>
-
-    {/* DIVISOR */}
-    <div className="w-20 h-px bg-[#d6d0c8] mx-auto mt-10" />
-
-    {/* TEXTO FINAL */}
-    <p className="mt-6 text-[#4a4a4a] text-sm md:text-base leading-7">
-      Gracias por ser parte de este momento tan importante para nosotros.
-    </p>
-
-  </div>
-</motion.section>
-
-<section className="relative py-36 px-6 flex justify-center items-center">
-
-  {/* FONDO */}
-  <div className="absolute inset-0 bg-[#f6f3ee]" />
-
-  {/* TARJETA */}
-  <div className="relative w-full max-w-2xl bg-white/60 backdrop-blur-md rounded-3xl px-12 py-16 text-center shadow-xl border border-[#e5e0d8]">
-
-    {/* ICONO */}
-    <div className="flex justify-center mb-8">
-      <div className="border border-[#d6d0c8] rounded-full p-5">
-        <Gem  className="text-[#8a847d]" size={30} strokeWidth={1.2} />
-      </div>
-    </div>
-
-    {/* TITULO */}
-    <h2 className="text-[#2c2c2c] text-2xl md:text-3xl tracking-[0.4em] uppercase font-light">
-      Dress Code
-    </h2>
-
-    {/* SUBTITULO */}
-    <p className="mt-4 text-[#8a847d] text-sm tracking-[0.3em] uppercase">
-      Formal
-    </p>
-
-    {/* DIVISOR */}
-    <div className="w-24 h-px bg-[#d6d0c8] mx-auto mt-8" />
-
-   
-  {/* COLORES */}
-<div className="mt-12">
-
-  <p className="text-xs text-[#8a847d] tracking-[0.3em] uppercase mb-8">
-    Colores no permitidos
-  </p>
-
-  <div className="grid grid-cols-4 gap-4 md:flex md:justify-center md:gap-10">
-
-    {[
-      { color: "bg-white border border-[#d6d0c8]", label: "Blanco" },
-      { color: "bg-[#e8dfcf]", label: "Beige" },
-      { color: "bg-[#c92a2a]", label: "Rojo" },
-      { color: "bg-[#2f4f6f]", label: "Azul" },
-    ].map((item, i) => (
-      <div key={i} className="flex flex-col items-center">
-
-        <div className={`w-10 h-10 md:w-14 md:h-14 rounded-full ${item.color} shadow-md`} />
-
-        <span className="mt-2 text-[10px] md:text-xs text-[#6b6b6b] tracking-wide text-center">
-          {item.label}
-        </span>
-
-      </div>
-    ))}
-
-  </div>
-
-</div>
-    {/* TEXTO */}
-    <div className="mt-12 space-y-4 text-base text-[#4a4a4a] leading-relaxed max-w-lg mx-auto">
-
-
-    </div>
-
-  </div>
-</section>
-
-<motion.section
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  viewport={{ once: true }}
-  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
->
-
-  {/* FONDO */}
-  <div className="absolute inset-0 bg-white" />
-
-  {/* CONTENIDO */}
-  <div className="relative max-w-2xl mx-auto">
-
-   <div className="flex justify-center mb-6">
-  <div className="border border-[#d6d0c8] rounded-full p-4">
-    <Music className="text-[#8a847d]" size={26} strokeWidth={1.5} />
-  </div>
-</div>
-
-    {/* TITULO */}
- <h2 className="text-[#2c2c2c] text-2xl md:text-3xl tracking-[0.35em] uppercase font-light">
-      ¿Qué canciones no pueden faltar?
-    </h2>
-
-    {/* TEXTO */}
-      <p className="mt-6 text-[#4a4a4a]    text-sm md:text-base leading-7 max-w-xl mx-auto">
-      Ayudanos a armar la playlist de la fiesta sugiriendo esas canciones
-      que te hagan bailar y disfrutar la noche.
-    </p>
-
-    {/* BOTON */}
-    <a
-      href="#"
-      className="mt-10 inline-block bg-[#2c2c2c] text-white px-10 py-4 rounded-full text-sm uppercase tracking-[0.25em] shadow-md hover:bg-[#3a3a3a] transition"
-    >
-      Sugerir canción
-    </a>
-
-  </div>
-</motion.section>
-
-<section className="relative py-28 px-6 text-center">
-
-  {/* FONDO */}
-  <div className="absolute inset-0 bg-[#f6f3ee]" />
-
-  {/* CONTENIDO */}
-  <div className="relative max-w-xl mx-auto">
-
-   <div className="flex justify-center mb-6">
-  <div className="border border-[#d6d0c8] rounded-full p-4 flex items-center justify-center">
-    <Baby className="text-[#8a847d]" size={26} strokeWidth={1.5} />
-  </div>
-</div>
-    
-
-
-    {/* TITULO */}
-    <h2 className="text-[#2c2c2c] text-2xl md:text-3xl tracking-[0.35em] uppercase font-light">
-      Solo adultos
-    </h2>
-
-    {/* TEXTO */}
-    <p className="mt-6 text-[#4a4a4a]    text-sm md:text-base leading-7 max-w-xl mx-auto">
-      Amamos a sus pequeños, pero queremos que ese día puedan relajarse
-      y disfrutar plenamente de la celebración.
-    </p>
-
-  </div>
-</section>
-
-{/* FOTOS - ESTILO HERO */}
-<motion.section
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  viewport={{ once: true }}
-  className="bg-white py-16 md:py-24 px-4 md:px-6 text-center"
->
-
-  {/* FONDO */}
-  <div className="absolute inset-0 bg-white" />
-
-  {/* CONTENIDO */}
-  <div className="relative max-w-3xl mx-auto">
-
-    {/* ICONO */}
-    <div className="flex justify-center mb-6">
-      <div className="border border-[#d6d0c8] rounded-full p-4">
-        <Camera className="text-[#8a847d]" size={26} strokeWidth={1.5} />
-      </div>
-    </div>
-
-    {/* TITULO */}
-    <h2 className="text-[#2c2c2c] text-2xl md:text-3xl tracking-[0.35em] uppercase font-light">
-      Queremos ver tus fotos
-    </h2>
-
-    {/* TEXTO */}
-    <p className="mt-6 text-[#4a4a4a]   text-sm md:text-base leading-7 max-w-xl mx-auto">
-      Podés subir todas las fotos del gran día a nuestro álbum compartido
-      para revivir juntos cada momento especial.
-    </p>
-
-    {/* BOTON */}
-    <a
-      href="#"
-      className="mt-10 inline-block bg-[#2c2c2c] text-white px-10 py-4 rounded-full text-sm uppercase tracking-[0.25em] shadow-md hover:bg-[#3a3a3a] transition"
-    >
-      Ir al álbum
-    </a>
-
-  </div>
-</motion.section>
-
+          <a
+            href="#"
+            className="mt-10 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
+          >
+            Ir al álbum
+          </a>
+        </div>
+      </motion.section>
 
       {/* CIERRE */}
       <section className="bg-[#ece7e1] py-16 text-center">
@@ -818,6 +458,124 @@ export default function Home() {
         </p>
       </section>
 
+      {/* MODAL RSVP */}
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl md:p-8">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute right-5 top-4 text-xl text-gray-400 hover:text-black"
+            >
+              ×
+            </button>
+
+            <h2 className="text-xl font-medium uppercase tracking-[0.2em]">
+              Confirmá tu asistencia
+            </h2>
+
+            <p className="mt-2 text-sm text-[#6b6b6b]">
+              Seleccioná tu nombre y elegí el menú.
+            </p>
+
+            <div className="mt-8 space-y-6 text-sm">
+              <div className="text-center">
+                <label className="block text-xs uppercase text-[#8a847d]">
+                  Nombre y apellido
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ingresá tu nombre"
+                  className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none focus:border-[#2c2c2c]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase text-[#8a847d]">
+                  Asistencia
+                </label>
+
+                <div className="mt-3 flex flex-col items-center space-y-3">
+                  <label className="flex items-center gap-2">
+                    <input type="radio" name="asistencia" defaultChecked />
+                    Voy a asistir
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <input type="radio" name="asistencia" />
+                    No podré asistir
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase text-[#8a847d]">
+                  Menú
+                </label>
+
+                <select className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none">
+                  <option>Seleccioná una opción</option>
+                  <option>Carne</option>
+                  <option>Vegetariano</option>
+                  <option>Vegano</option>
+                </select>
+              </div>
+
+              <button className="mt-4 w-full rounded-full bg-[#2c2c2c] py-3 uppercase tracking-[0.2em] text-white transition hover:bg-[#3a3a3a]">
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL CBU */}
+      {openCBU && (
+        <div
+          onClick={() => setOpenCBU(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl md:p-8"
+          >
+            <button
+              onClick={() => setOpenCBU(false)}
+              className="absolute right-5 top-4 text-xl text-gray-400 hover:text-black"
+            >
+              ×
+            </button>
+
+            <h2 className="text-lg font-medium uppercase tracking-[0.25em]">
+              Datos bancarios
+            </h2>
+
+            <p className="mt-2 text-sm text-[#6b6b6b]">
+              Podés realizar la transferencia a la siguiente cuenta:
+            </p>
+
+            <div className="mt-6 space-y-4 text-sm text-[#4a4a4a]">
+              <div>
+                <p className="text-xs uppercase text-[#8a847d]">Titular</p>
+                <p className="font-medium text-[#2c2c2c]">
+                  Pérez Guzmán Jimena
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase text-[#8a847d]">Alias</p>
+                <p className="font-medium">jimena.perezguzman</p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCopyAlias}
+              className="mt-6 rounded-full bg-[#2c2c2c] px-8 py-3 text-xs uppercase tracking-[0.2em] text-white"
+            >
+              {copiado ? "Copiado ✔" : "Copiar alias"}
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
