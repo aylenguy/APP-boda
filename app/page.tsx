@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 const RSVP_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbw40DS1OOJqeeU-n_6KSQllGTXy35nI5dzjF2q7moNJzC4SPeS4g2qMLUNtXRD-frJ9tQ/exec";
+  "https://script.google.com/macros/s/AKfycbxna1tAH6-12BMirNUzRe3XOrvOkFWkjWdyTAFs80i5yzc-4PQYlf7wiLo25TaTCDLT/exec";
 
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
@@ -215,7 +215,7 @@ export default function Home() {
           nombre: matchedGuestName,
           asistencia,
           menu: asistencia === "No" ? "" : menu,
-          tieneAlergia: asistencia === "No" ? "No" : tieneAlergia,
+          tieneAlergia: asistencia === "No" ? "" : tieneAlergia,
           alergiaDetalle:
             asistencia === "No" || tieneAlergia === "No"
               ? ""
@@ -765,12 +765,12 @@ export default function Home() {
       type="radio"
       name="asistencia"
       checked={asistencia === "No"}
-      onChange={() => {
-        setAsistencia("No");
-        setMenu("");
-        setTieneAlergia("No");
-        setAlergiaDetalle("");
-      }}
+     onChange={() => {
+  setAsistencia("No");
+  setMenu("");
+  setTieneAlergia(""); // ← vacío
+  setAlergiaDetalle("");
+}}
       disabled={sending}
     />
     No podré asistir
@@ -910,6 +910,22 @@ export default function Home() {
                   Pérez Guzmán Jimena
                 </p>
               </div>
+
+               <div>
+                <p className="text-xs uppercase text-[#8a847d]">CUIT/CUIL</p>
+                <p className="font-medium text-[#2c2c2c]">
+                  27427038489
+                </p>
+              </div>
+
+               <div>
+                <p className="text-xs uppercase text-[#8a847d]">Entidad</p>
+                <p className="font-medium text-[#2c2c2c]">
+                  Nuevo Banco de Santa Fe
+                </p>
+              </div>
+
+              
 
               <div>
                 <p className="text-xs uppercase text-[#8a847d]">Alias</p>
