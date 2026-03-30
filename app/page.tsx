@@ -409,12 +409,7 @@ className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:ob
 
           <div className="mx-auto mt-8 h-px w-24 bg-[#d6d0c8]" />
 
-          <div className="mx-auto mt-10 max-w-lg space-y-4 text-base leading-relaxed text-[#4a4a4a] md:mt-12">
-            <p>
-              Elegí un look elegante y cómodo para disfrutar con nosotros esta
-              noche tan especial.
-            </p>
-          </div>
+        
         </div>
       </section>
 
