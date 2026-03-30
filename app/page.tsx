@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
   Heart,
@@ -11,7 +11,8 @@ import {
   Gem,
 } from "lucide-react";
 
-const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynxNkLJtDvFrMC1WbsJ-NnAZTLmXqmYGueA6LOMfcL9YawARDzsLIvCBgi9_JcMCrE0A/exec";
+const RSVP_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbynxNkLJtDvFrMC1WbsJ-NnAZTLmXqmYGueA6LOMfcL9YawARDzsLIvCBgi9_JcMCrE0A/exec";
 
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
@@ -31,6 +32,9 @@ export default function Home() {
   const [sending, setSending] = useState(false);
   const [rsvpMessage, setRsvpMessage] = useState("");
   const [rsvpError, setRsvpError] = useState("");
+
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestionsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -66,6 +70,22 @@ export default function Home() {
     fetchGuests();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const countdownItems = [
     { key: "days", label: "días" },
     { key: "hours", label: "hs" },
@@ -77,6 +97,30 @@ export default function Home() {
     () => guestNames.map((n) => normalizeText(n)),
     [guestNames]
   );
+
+  const exactGuestName = useMemo(() => {
+    const normalizedInput = normalizeText(nombre);
+
+    if (!normalizedInput) return "";
+
+    const index = normalizedGuestNames.findIndex(
+      (guest) => guest === normalizedInput
+    );
+
+    return index >= 0 ? guestNames[index] : "";
+  }, [nombre, guestNames, normalizedGuestNames]);
+
+  const filteredGuests = useMemo(() => {
+    const normalizedInput = normalizeText(nombre);
+
+    if (!normalizedInput) return guestNames.slice(0, 8);
+
+    return guestNames
+      .filter((guest) =>
+        normalizeText(guest).includes(normalizedInput)
+      )
+      .slice(0, 8);
+  }, [guestNames, nombre]);
 
   const handleCopyAlias = async () => {
     try {
@@ -94,11 +138,19 @@ export default function Home() {
     setMenu("");
     setRsvpMessage("");
     setRsvpError("");
+    setShowSuggestions(false);
   };
 
   const handleCloseRsvp = () => {
     setOpen(false);
     setRsvpMessage("");
+    setRsvpError("");
+    setShowSuggestions(false);
+  };
+
+  const handleSelectGuest = (guest: string) => {
+    setNombre(guest);
+    setShowSuggestions(false);
     setRsvpError("");
   };
 
@@ -113,12 +165,17 @@ export default function Home() {
       return;
     }
 
-    const nameExists = normalizedGuestNames.includes(normalizeText(trimmedName));
+    const normalizedInput = normalizeText(trimmedName);
+    const matchedIndex = normalizedGuestNames.findIndex(
+      (guest) => guest === normalizedInput
+    );
 
-    if (!nameExists) {
+    if (matchedIndex === -1) {
       setRsvpError("Ese nombre no figura en la lista de invitados.");
       return;
     }
+
+    const matchedGuestName = guestNames[matchedIndex];
 
     if (asistencia === "Si" && !menu) {
       setRsvpError("Seleccioná una opción de menú.");
@@ -139,7 +196,7 @@ export default function Home() {
           "Content-Type": "text/plain;charset=utf-8",
         },
         body: JSON.stringify({
-          nombre: trimmedName,
+          nombre: matchedGuestName,
           asistencia,
           menu: asistencia === "No" ? "" : menu,
         }),
@@ -402,13 +459,12 @@ export default function Home() {
                 Agendá este día tan especial para no perderte ningún momento.
               </p>
 
-             <button
-  onClick={handleAddToCalendar}
-  className="mt-8 rounded-full border border-[#cfc8c0] px-10 py-3 text-sm uppercase tracking-[0.15em] transition hover:bg-[#2c2c2c] hover:text-white"
->
-  Agregar
-</button>
-
+              <button
+                onClick={handleAddToCalendar}
+                className="mt-8 rounded-full border border-[#cfc8c0] px-10 py-3 text-sm uppercase tracking-[0.15em] transition hover:bg-[#2c2c2c] hover:text-white"
+              >
+                Agregar
+              </button>
             </div>
           </div>
         </div>
@@ -567,7 +623,7 @@ export default function Home() {
       {/* MODAL RSVP */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl md:p-8">
+          <div className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 text-center shadow-2xl md:p-8">
             <button
               onClick={handleCloseRsvp}
               className="absolute right-5 top-4 text-xl text-gray-400 hover:text-black"
@@ -584,30 +640,66 @@ export default function Home() {
             </p>
 
             <div className="mt-8 space-y-6 text-sm">
-              <div className="text-center">
+              <div className="text-center" ref={suggestionsRef}>
                 <label className="block text-xs uppercase text-[#8a847d]">
                   Nombre y apellido
                 </label>
 
-                <input
-                  list="guest-list"
-                  type="text"
-                  placeholder={
-                    loadingGuests
-                      ? "Cargando invitados..."
-                      : "Ingresá tu nombre"
-                  }
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none focus:border-[#2c2c2c]"
-                  disabled={loadingGuests || sending}
-                />
+                <div className="relative mt-3">
+                  <input
+                    type="text"
+                    placeholder={
+                      loadingGuests
+                        ? "Cargando invitados..."
+                        : "Ingresá tu nombre"
+                    }
+                    value={nombre}
+                    onChange={(e) => {
+                      setNombre(e.target.value);
+                      setShowSuggestions(true);
+                      setRsvpError("");
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    className="w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none focus:border-[#2c2c2c]"
+                    disabled={loadingGuests || sending}
+                    autoComplete="off"
+                    autoCapitalize="words"
+                    autoCorrect="off"
+                    spellCheck={false}
+                  />
 
-                <datalist id="guest-list">
-                  {guestNames.map((guest, index) => (
-                    <option key={`${guest}-${index}`} value={guest} />
-                  ))}
-                </datalist>
+                  {showSuggestions && filteredGuests.length > 0 && (
+                    <div className="absolute left-0 right-0 z-30 mt-2 overflow-hidden rounded-2xl border border-[#ddd6cf] bg-white text-left shadow-[0_18px_40px_rgba(0,0,0,0.10)]">
+                      <div className="max-h-56 overflow-y-auto py-1">
+                        {filteredGuests.map((guest, index) => (
+                          <button
+                            key={`${guest}-${index}`}
+                            type="button"
+                            onClick={() => handleSelectGuest(guest)}
+                            className="block w-full px-4 py-3 text-left text-sm text-[#2c2c2c] transition hover:bg-[#f6f3ee]"
+                          >
+                            {guest}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {!loadingGuests && nombre.trim() && exactGuestName && (
+                  <p className="mt-3 text-xs text-green-700">
+                    Invitado encontrado: <span className="font-medium">{exactGuestName}</span>
+                  </p>
+                )}
+
+                {!loadingGuests &&
+                  nombre.trim() &&
+                  !exactGuestName &&
+                  filteredGuests.length === 0 && (
+                    <p className="mt-3 text-xs text-[#8a847d]">
+                      No encontramos coincidencias.
+                    </p>
+                  )}
               </div>
 
               <div>
@@ -654,16 +746,16 @@ export default function Home() {
                   disabled={asistencia === "No" || sending}
                   className="mt-3 w-full rounded-full border border-[#ddd6cf] px-4 py-3 text-center outline-none disabled:cursor-not-allowed disabled:bg-[#f3f1ed]"
                 >
-                  <option value="">Seleccioná una opción</option>
-                  <option value="Carne">Carne</option>
-                  <option value="Vegetariano">Vegetariano</option>
-                  <option value="Vegano">Vegano</option>
+                 <option value="">Seleccioná una opción</option>
+                  <option value="Menú común">Menú común</option>
+                  <option value="Menú Vegetariano">Menú Vegetariano</option>
+                  <option value="Menú Vegano">Menú Vegano</option>
+                  <option value="Menú celíaco">Menú celíaco</option>
+                  <option value="Alérgico a algún alimento">Alérgico a algún alimento</option>
                 </select>
               </div>
 
-              {rsvpError && (
-                <p className="text-sm text-red-600">{rsvpError}</p>
-              )}
+              {rsvpError && <p className="text-sm text-red-600">{rsvpError}</p>}
 
               {rsvpMessage && (
                 <p className="text-sm text-green-700">{rsvpMessage}</p>
@@ -738,10 +830,7 @@ function handleAddToCalendar() {
 
   url.searchParams.append("action", "TEMPLATE");
   url.searchParams.append("text", "Casamiento de Jime y Joel");
-  url.searchParams.append(
-    "dates",
-    "20270828T180000/20270829T040000"
-  );
+  url.searchParams.append("dates", "20270828T180000/20270829T040000");
   url.searchParams.append(
     "details",
     "Ceremonia 18:00 hs - Primera Iglesia Bautista, San Martín 1558. Celebración desde las 21 hs en Nebraska."
