@@ -29,7 +29,7 @@ export default function Home() {
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"Si" | "No">("Si");
   const [menu, setMenu] = useState("");
-  const [tieneAlergia, setTieneAlergia] = useState<"No" | "Si">("No");
+  const [tieneAlergia, setTieneAlergia] = useState<"" | "No" | "Si">("No");
   const [alergiaDetalle, setAlergiaDetalle] = useState("");
   const [sending, setSending] = useState(false);
   const [sendingText, setSendingText] = useState("");
