@@ -271,71 +271,71 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f6f3ee] text-[#1a1a1a]">
       {/* HERO */}
-      <section className="relative h-[82vh] min-h-[620px] w-full overflow-hidden bg-black md:h-[88vh] xl:h-[82vh]">
-        <motion.img
-          src="/images/hero-boda.jpeg?v=2"
-          alt="Jime y Joel"
-          initial={{ scale: 1.04, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="absolute inset-0 h-full w-full object-cover object-[80%_center] md:object-center"
-        />
+      <section className="relative h-[90vh] min-h-[520px] w-full overflow-hidden bg-black md:h-[88vh] xl:h-[82vh]">
+  <motion.img
+    src="/images/hero-boda.jpeg?v=2"
+    alt="Jime y Joel"
+    initial={{ scale: 1.04, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    transition={{ duration: 0.9, ease: "easeOut" }}
+    className="absolute inset-0 h-full w-full object-cover object-[75%_center] md:object-center"
+  />
 
-        <div className="absolute inset-0 bg-white/25 md:bg-white/45" />
+  <div className="absolute inset-0 bg-white/30 md:bg-white/45" />
 
-        <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.6, ease: "easeOut" }}
-            className="mx-auto max-w-[680px]"
-          >
-            <p className="text-[13px] uppercase tracking-[0.35em] text-[#8a847d] md:text-[15px]">
-              ¡Nos casamos!
-            </p>
+  <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.15, duration: 0.6, ease: "easeOut" }}
+      className="mx-auto max-w-[680px]"
+    >
+      <p className="text-[12px] uppercase tracking-[0.35em] text-[#8a847d] md:text-[15px]">
+        ¡Nos casamos!
+      </p>
 
-            <h1 className="mt-6">
-              <motion.span
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.22, duration: 0.5 }}
-className={`${miFuente.className} block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]`}              >
-                Jime
-              </motion.span>
+      <h1 className="mt-4 md:mt-6">
+        <motion.span
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.22, duration: 0.5 }}
+          className={`${miFuente.className} block text-5xl leading-tight font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]`}
+        >
+          Jime
+        </motion.span>
 
-             
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.32, duration: 0.35 }}
+          className="block text-lg text-[#8a847d] md:text-xl"
+        >
+          &
+        </motion.span>
 
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.32, duration: 0.35 }}
-                className="block text-base text-[#8a847d] md:text-xl"
-              >
-                &
-              </motion.span>
+        <motion.span
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className={`${miFuente.className} block text-5xl leading-tight font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]`}
+        >
+          Joel
+        </motion.span>
+      </h1>
 
-              <motion.span
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
- className={`${miFuente.className} block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]`}              >
-                Joel
-              </motion.span>
-            </h1>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.45 }}
-              className="mt-10 md:mt-14"
-            >
-              <span className="inline-block border border-[#d6d0c8] bg-white/80 px-5 py-3 text-xs tracking-[0.22em] md:px-8 md:py-4 md:text-sm">
-                28 · 08 · 2027
-              </span>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.45 }}
+        className="mt-8 md:mt-14"
+      >
+        <span className="inline-block border border-[#d6d0c8] bg-white/80 px-6 py-3 text-sm tracking-[0.22em] md:px-8 md:py-4 md:text-sm">
+          28 · 08 · 2027
+        </span>
+      </motion.div>
+    </motion.div>
+  </div>
+</section>
 
       {/* COUNTDOWN */}
       <section className="bg-[#f6f3ee] px-3 py-14 text-center md:px-6">
