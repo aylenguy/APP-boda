@@ -18,7 +18,7 @@ const miFuente = localFont({
 });
 
 const RSVP_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxna1tAH6-12BMirNUzRe3XOrvOkFWkjWdyTAFs80i5yzc-4PQYlf7wiLo25TaTCDLT/exec";
+  "https://script.google.com/macros/s/AKfycbxhyHprcMiRIy0CgszXqrjO3uZmyjz7s6GLwTAfPwZekQdaPeNQPB4UZBHDDnoSGzORJw/exec";
 
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
