@@ -11,11 +11,19 @@ import {
   Gem,
 } from "lucide-react";
 
+import localFont from "next/font/local";
+const miFuente = localFont({
+  src: "../public/fonts/fuente.ttf", // ajustá el nombre
+  variable: "--font-boda",
+});
+
 const RSVP_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxna1tAH6-12BMirNUzRe3XOrvOkFWkjWdyTAFs80i5yzc-4PQYlf7wiLo25TaTCDLT/exec";
 
 export default function Home() {
   const weddingDate = new Date("2027-08-28T18:00:00");
+
+  
 
   const [open, setOpen] = useState(false);
   const [openCBU, setOpenCBU] = useState(false);
@@ -291,10 +299,11 @@ export default function Home() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.22, duration: 0.5 }}
-                className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
-              >
+className={`${miFuente.className} block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]`}              >
                 Jime
               </motion.span>
+
+             
 
               <motion.span
                 initial={{ opacity: 0 }}
@@ -309,8 +318,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
-                className="block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]"
-              >
+ className={`${miFuente.className} block text-4xl font-light tracking-[0.05em] md:text-6xl xl:text-[5.2rem]`}              >
                 Joel
               </motion.span>
             </h1>
@@ -353,98 +361,113 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ITINERARIO */}
-      <motion.section
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true }}
-        className="bg-white px-4 py-16 text-center md:px-6 md:py-24"
-      >
-        <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px] md:tracking-[0.5em]">
-          Itinerario
+   
+   {/* ITINERARIO */}
+<motion.section
+  initial={{ opacity: 0, y: 40 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="bg-white px-4 py-16 text-center md:px-6 md:py-24"
+>
+  <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px] md:tracking-[0.5em]">
+    Itinerario
+  </p>
+
+  <h2 className="mt-4 text-[1.9rem] font-light tracking-[0.05em] md:text-[2.6rem]">
+    Nuestro gran día
+  </h2>
+
+  <div className="relative mx-auto mt-12 max-w-3xl md:mt-20">
+    <div className="absolute left-3 top-0 h-full w-[1px] bg-[#d6d0c8] md:left-1/2 md:-translate-x-1/2" />
+
+    {/* CEREMONIA */}
+    <div className="relative mb-12 flex flex-col items-start justify-between md:mb-16 md:flex-row md:items-center">
+      <div className="absolute left-3 h-3 w-3 -translate-x-1/2 rounded-full border border-white bg-[#cfc8c0] shadow md:left-1/2 md:h-4 md:w-4" />
+
+      <div className="ml-8 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[#ddd6cf] bg-white p-4 text-left shadow-sm md:ml-0 md:w-[45%] md:max-w-none md:p-8 md:text-right">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px]">
+          Ceremonia
         </p>
 
-        <h2 className="mt-4 text-[1.9rem] font-light tracking-[0.05em] md:text-[2.6rem]">
-          Nuestro gran día
-        </h2>
+        <h3 className="mt-2 text-xl font-light md:mt-3 md:text-2xl">
+          18:00 hs
+        </h3>
 
-        <div className="relative mx-auto mt-12 max-w-3xl md:mt-20">
-          <div className="absolute left-3 top-0 h-full w-[1px] bg-[#d6d0c8] md:left-1/2 md:-translate-x-1/2" />
+        <p className="mt-3">Ubicación a confirmar</p>
 
-          <div className="relative mb-12 flex flex-col items-start justify-between md:mb-16 md:flex-row md:items-center">
-            <div className="absolute left-3 h-3 w-3 -translate-x-1/2 rounded-full border border-white bg-[#cfc8c0] shadow md:left-1/2 md:h-4 md:w-4" />
+        {/*
+        <p className="mt-3">Primera Iglesia Bautista</p>
+        <p className="text-sm text-[#6b6b6b]">San Martín 1558</p>
 
-            <div className="ml-8 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[#ddd6cf] bg-white p-4 text-left shadow-sm md:ml-0 md:w-[45%] md:max-w-none md:p-8 md:text-right">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px]">
-                Ceremonia
-              </p>
+        <a
+          href="https://maps.app.goo.gl/BhSp2rAiA9vdSAFP9"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
+        >
+          Ver ubicación
+        </a>
+        */}
+      </div>
 
-              <h3 className="mt-2 text-xl font-light md:mt-3 md:text-2xl">
-                18:00 hs
-              </h3>
+      <div className="hidden md:block md:w-[45%]" />
+    </div>
 
-              <p className="mt-3">Primera Iglesia Bautista</p>
-              <p className="text-sm text-[#6b6b6b]">San Martín 1558</p>
+    {/* CELEBRACIÓN */}
+    <div className="relative flex flex-col items-start justify-between md:flex-row md:items-center">
+      <div className="absolute left-3 h-3 w-3 -translate-x-1/2 rounded-full border border-white bg-[#cfc8c0] shadow md:left-1/2 md:h-4 md:w-4" />
 
-              <a
-                href="https://maps.app.goo.gl/BhSp2rAiA9vdSAFP9"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
-              >
-                Ver ubicación
-              </a>
-            </div>
+      <div className="hidden md:block md:w-[45%]" />
 
-            <div className="hidden md:block md:w-[45%]" />
-          </div>
+      <div className="ml-8 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[#ddd6cf] bg-white p-4 text-left shadow-sm md:ml-0 md:w-[45%] md:max-w-none md:p-8">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px]">
+          Celebración
+        </p>
 
-          <div className="relative flex flex-col items-start justify-between md:flex-row md:items-center">
-            <div className="absolute left-3 h-3 w-3 -translate-x-1/2 rounded-full border border-white bg-[#cfc8c0] shadow md:left-1/2 md:h-4 md:w-4" />
+        <h3 className="mt-2 text-xl font-light md:mt-3 md:text-2xl">
+          21:00 hs — 04:00 hs
+        </h3>
 
-            <div className="hidden md:block md:w-[45%]" />
+        <p className="mt-3">Nebraska</p>
+        <p className="text-sm text-[#6b6b6b]">Mendoza 5130</p>
 
-            <div className="ml-8 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[#ddd6cf] bg-white p-4 text-left shadow-sm md:ml-0 md:w-[45%] md:max-w-none md:p-8">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-[#8a847d] md:text-[11px]">
-                Celebración
-              </p>
+        <a
+          href="https://www.google.com/maps?q=Mendoza+5130"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
+        >
+          Ver ubicación
+        </a>
+      </div>
+    </div>
+  </div>
+</motion.section>
 
-              <h3 className="mt-2 text-xl font-light md:mt-3 md:text-2xl">
-                21:00 hs — 04:00 hs
-              </h3>
 
-              <p className="mt-3">Nebraska</p>
-              <p className="text-sm text-[#6b6b6b]">Mendoza 5130</p>
 
-              <a
-                href="https://www.google.com/maps?q=Mendoza+5130"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-block border-b border-[#2c2c2c] text-xs uppercase tracking-[0.2em] text-[#2c2c2c] hover:opacity-70 md:mt-6 md:text-sm"
-              >
-                Ver ubicación
-              </a>
-            </div>
-          </div>
-        </div>
-      </motion.section>
+{/* FRASE */}
+<section className="bg-[#f6f3ee] px-6 py-20 text-center md:py-24">
+  <div className="mb-6 flex justify-center">
+    <Heart className="text-[#8a847d]" size={28} strokeWidth={1.5} />
+  </div>
 
-      {/* FRASE */}
-      <section className="bg-[#f6f3ee] px-6 py-20 text-center md:py-24">
-        <div className="mb-6 flex justify-center">
-          <Heart className="text-[#8a847d]" size={28} strokeWidth={1.5} />
-        </div>
+  <h2 className="text-2xl font-light tracking-[0.1em] md:text-3xl">
+    “En esta vida todo tiene su momento;
+    <span className="mt-2 block text-[#8a847d]">
+      hay un tiempo para todo:”
+    </span>
+  </h2>
 
-        <h2 className="text-2xl font-light tracking-[0.1em] md:text-3xl">
-          Sean parte de nuestra
-          <span className="mt-2 block text-[#8a847d]">historia de amor</span>
-        </h2>
+  <p className="mt-4 text-sm text-[#8a847d] tracking-wider">
+    Eclesiastés 3:1
+  </p>
 
-        <div className="mt-8 flex justify-center">
-          <div className="h-[1px] w-16 bg-[#d6d0c8]" />
-        </div>
-      </section>
+  <div className="mt-8 flex justify-center">
+    <div className="h-[1px] w-16 bg-[#d6d0c8]" />
+  </div>
+</section>
 
       {/* RSVP + CALENDARIO */}
       <motion.section
