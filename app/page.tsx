@@ -531,92 +531,128 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* TARJETA */}
-      <section className="relative flex items-center justify-center overflow-hidden px-6 py-20 md:py-28">
-        <div className="absolute inset-0 bg-[#f6f3ee]" />
+     <section className="relative flex items-center justify-center overflow-hidden px-6 py-20 md:py-28">
+  <div className="absolute inset-0 bg-[#f6f3ee]" />
 
-        <div className="relative w-full max-w-md rounded-3xl border border-[#e5e0d8] bg-white/50 px-8 py-12 text-center shadow-xl backdrop-blur-md md:px-10 md:py-14">
-          <h2 className="mb-8 text-2xl font-light uppercase tracking-[0.25em] text-[#2c2c2c] md:mb-10 md:text-3xl">
-            Información de la tarjeta
-          </h2>
+  <div className="relative w-full max-w-sm rounded-3xl border border-[#e5e0d8] bg-white/50 px-6 py-10 text-center shadow-xl backdrop-blur-md md:px-8 md:py-12">
+    <h2 className="mb-6 text-xl font-light uppercase tracking-[0.25em] text-[#2c2c2c] md:mb-8 md:text-2xl">
+      Información de la tarjeta
+    </h2>
 
-          <div className="space-y-5 text-sm leading-relaxed text-[#4a4a4a] md:text-base">
+    {(() => {
+      const phone = "5493416435372";
+      const message =
+        "Hola! cuál es el valor actualizado de la tarjeta?";
+
+      const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
+        message
+      )}`;
+
+      return (
+        <>
+          <div className="space-y-4 text-sm leading-relaxed text-[#4a4a4a] md:text-base">
             <div>
-              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
+              <p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
                 Valor actual
               </p>
               <p>
                 El valor de la tarjeta es de{" "}
                 <span className="text-base font-medium text-[#2c2c2c]">
-                  $95 dólares (dólar oficial, cotización del día)
+                  $135.000 (valor estimado según cotización del dólar)
                 </span>
               </p>
             </div>
 
-            <div className="mx-auto h-px w-16 bg-[#d6d0c8]" />
+            <div className="mx-auto h-px w-12 bg-[#d6d0c8]" />
 
             <div>
-              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
+              <p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
                 Actualización
               </p>
-              <p>Aumenta según el IPC del país</p>
+              <p>
+                El importe se ajusta mensualmente un 4%, según el IPC del país
+              </p>
             </div>
 
-            <div className="mx-auto h-px w-16 bg-[#d6d0c8]" />
-          </div>
+            <div className="mx-auto h-px w-12 bg-[#d6d0c8]" />
 
-          <button
-            onClick={() => setOpenCBU(true)}
-            className="mt-5 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
-          >
-            Abonar tarjeta
-          </button>
-
-          <p className="mt-8 text-sm italic text-[#8a847d] md:mt-10">
-            Nos encantaría contar con tu presencia en este día tan especial.
-          </p>
-        </div>
-      </section>
-
-      {/* REGALOS */}
-      <motion.section
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true }}
-        className="relative bg-white px-4 py-16 text-center md:px-6 md:py-24"
-      >
-        <div className="mx-auto max-w-2xl">
-          <div className="my-6 flex justify-center">
-            <div className="rounded-full border border-[#d6d0c8] p-4">
-              <Gift className="text-[#8a847d]" size={26} strokeWidth={1.5} />
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#5f6b75]">
+                Importante
+              </p>
+              <p>
+                Antes de abonar, consultar el valor actualizado con los novios
+              </p>
             </div>
+
+            <div className="mx-auto h-px w-12 bg-[#d6d0c8]" />
           </div>
 
-          <h2 className="text-2xl font-light uppercase tracking-[0.35em] text-[#2c2c2c] md:text-3xl">
-            Regalos
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-[620px] text-sm leading-7 text-[#4a4a4a] md:text-base">
-            Nuestro mejor regalo es que puedas acompañarnos en este día tan
-            especial. Pero si deseás hacernos un obsequio, podés colaborar con
-            nuestra luna de miel.
-          </p>
-
-          <button
-            onClick={() => setOpenCBU(true)}
-            className="mt-10 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-block rounded-full bg-[#2c2c2c] px-8 py-3 text-xs uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
           >
-            Hacer un regalo
-          </button>
+            CONSULTAR POR WHATSAPP
+          </a>
+        </>
+      );
+    })()}
 
-          <div className="mx-auto mt-10 h-px w-20 bg-[#d6d0c8]" />
+    <p className="mt-6 text-sm italic text-[#8a847d] md:mt-8">
+      Nos encantaría contar con tu presencia en este día tan especial.
+    </p>
+  </div>
+</section>
 
-          <p className="mt-6 text-sm leading-7 text-[#4a4a4a] md:text-base">
-            Gracias por ser parte de este momento tan importante para nosotros.
-          </p>
-        </div>
-      </motion.section>
+
+{/* REGALOS */}
+{/* REGALOS */}
+<motion.section
+  initial={{ opacity: 0, y: 40 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="relative bg-white px-6 py-20 text-center md:py-28"
+>
+  <div className="mx-auto max-w-2xl">
+    
+    {/* ICONO */}
+    <div className="mb-6 flex justify-center">
+      <div className="rounded-full border border-[#d6d0c8] p-4">
+        <Gift className="text-[#8a847d]" size={26} strokeWidth={1.5} />
+      </div>
+    </div>
+
+    {/* TÍTULO */}
+    <h2 className="text-2xl font-light uppercase tracking-[0.35em] text-[#2c2c2c] md:text-3xl">
+      Regalos
+    </h2>
+
+    {/* TEXTO */}
+    <p className="mx-auto mt-6 max-w-[620px] text-sm leading-7 text-[#4a4a4a] md:text-base">
+      Nuestro mejor regalo es que puedas acompañarnos en este día tan especial.
+      Pero si deseás hacernos un obsequio, podés colaborar con nuestra luna de miel.
+    </p>
+
+    {/* BOTÓN */}
+    <button
+      onClick={() => setOpenCBU(true)}
+      className="mt-10 inline-block rounded-full bg-[#2c2c2c] px-10 py-4 text-sm uppercase tracking-[0.25em] text-white shadow-md transition hover:bg-[#3a3a3a]"
+    >
+      HACER UN REGALO
+    </button>
+
+    {/* DIVIDER */}
+    <div className="mx-auto mt-10 h-px w-20 bg-[#d6d0c8]" />
+
+    {/* TEXTO FINAL */}
+    <p className="mt-6 text-sm leading-7 text-[#4a4a4a] md:text-base">
+      Gracias por ser parte de este momento tan importante para nosotros.
+    </p>
+  </div>
+</motion.section>
 
       {/* DRESS CODE */}
       <section className="relative flex items-center justify-center overflow-hidden px-6 py-20 md:py-28">
