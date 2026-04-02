@@ -1013,7 +1013,7 @@ function handleAddToCalendar() {
   url.searchParams.append("dates", "20270828T180000/20270829T040000");
   url.searchParams.append(
     "details",
-    "Ceremonia 18:00 hs - Primera Iglesia Bautista, San Martín 1558. Celebración desde las 21 hs en Nebraska."
+    "Celebración desde las 21 hs en Nebraska."
   );
   url.searchParams.append("location", "Mendoza 5130, Rosario, Argentina");
 
